@@ -1,5 +1,25 @@
 # Alyra-Dapp
 
+## Méthode de GIT
+Logique git flow 
+1) Affecte toi le ticket
+2) Créer la branche à partir de `main`
+```
+git switch main
+git pull origin
+git switch -c DAPPxxx
+```
+### Pour commit 
+[DAPPxxx][doc|feat|fix|style]: gitmoji Update documentation for git command
+
+3) push
+```
+git push orgin DAPPxxx
+```
+4) Pull Requests
+- Demande peer en review
+5) valide + merge (si dernier commit)
+5bis) REBASE OBLIGATOIRE sur dernier commit main.
 
 ### Consigne 
 ### Votre Dapp doit permettre : 
