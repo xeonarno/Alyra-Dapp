@@ -10,11 +10,11 @@ git pull origin
 git switch -c DAPPxxx
 ```
 ### Pour commit 
-[DAPPxxx][doc|feat|fix|style]: gitmoji Update documentation for git command
+[DAPPxxx][doc|feat|fix|style]: [gitmoji](https://gitmoji.dev) Update documentation for git command
 
 3) push
 ```
-git push orgin DAPPxxx
+git push origin DAPPxxx
 ```
 4) Pull Requests
 - Demande peer en review
