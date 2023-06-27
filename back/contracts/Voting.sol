@@ -37,6 +37,7 @@ contract Voting is Ownable {
     WorkflowStatus public workflowStatus;
     Proposal[] proposalsArray;
     mapping (address => Voter) voters;
+    uint private nnMaxProposal;
 
 
     event VoterRegistered(address voterAddress); 
@@ -101,6 +102,8 @@ contract Voting is Ownable {
     function addProposal(string calldata _desc) external onlyVoters {
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationStarted, 'Proposals are not allowed yet');
         require(keccak256(abi.encode(_desc)) != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer'); // facultatif
+        require(nnMaxProposal < 20, 'Nombre Max. de propositions atteintes');	// to avoid Gas limit hack
+        ++nnMaxProposal;
         // voir que desc est different des autres
 
         Proposal memory proposal;
