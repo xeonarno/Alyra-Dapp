@@ -24,8 +24,9 @@ contract Voting is Ownable {
     }
 
     struct Proposal {
-        string description;
-        uint voteCount;
+        string  description;
+        uint    voteCount;
+        bytes32 hash;
     }
 
     enum  WorkflowStatus {
@@ -119,9 +120,24 @@ contract Voting is Ownable {
         uint length = strlen(_desc);
         require( length < MAX_STRING_LENGTH, "Taille max. d'une proposition");   // to avoid gas consumption
         require( length >= MIN_STRING_LENGTH, "Taille min. d'une proposition");   // to avoid stupid proposal
+        
+        bytes32 hash = keccak256(abi.encode(_desc));
+        require(hash != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer'); // facultatif
+
+        // check if proposal is unique !
+        bool found;
+        
+        uint l = proposalsArray.length;
+        for( uint i; i < l; ++i){
+            if( hash != proposalsArray[i].hash ) { continue;}
+            found = true;
+            break;
+        }
+        require(!found, unicode'Cette proposition existe déjà!');
 
         Proposal memory proposal;
         proposal.description = _desc;
+        proposal.hash        = hash;
         proposalsArray.push(proposal);
         emit ProposalRegistered(proposalsArray.length-1);
     }
