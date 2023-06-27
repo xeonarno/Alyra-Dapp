@@ -12,6 +12,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  */
 contract Voting is Ownable {
     uint public constant MAX_SECURITY_PROPOSAL = 20;
+    uint public constant MAX_STRING_LENGTH = 64;
+    uint public constant MIN_STRING_LENGTH = 10;
 
     uint public winningProposalID;
     
@@ -113,7 +115,10 @@ contract Voting is Ownable {
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationStarted, 'Proposals are not allowed yet');
         require(keccak256(abi.encode(_desc)) != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer');
         require(proposalsArray.length < MAX_SECURITY_PROPOSAL, 'Nombre Max. de propositions atteintes');	
-        require( strlen(_desc) < MAX_STRING_LENGTH, "Taille max. d'une proposition");   // to avoid gas consumption
+        
+        uint length = strlen(_desc);
+        require( length < MAX_STRING_LENGTH, "Taille max. d'une proposition");   // to avoid gas consumption
+        require( length >= MIN_STRING_LENGTH, "Taille min. d'une proposition");   // to avoid stupid proposal
 
         Proposal memory proposal;
         proposal.description = _desc;
