@@ -11,6 +11,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
  * @notice  Add voters; Add proposals; Then vote for a proposal.
  */
 contract Voting is Ownable {
+    uint public constant MAX_SECURITY_PROPOSAL = 20;
 
     uint public winningProposalID;
     
@@ -37,7 +38,6 @@ contract Voting is Ownable {
     WorkflowStatus public workflowStatus;
     Proposal[] proposalsArray;
     mapping (address => Voter) voters;
-
 
     event VoterRegistered(address voterAddress); 
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
@@ -100,8 +100,8 @@ contract Voting is Ownable {
      */
     function addProposal(string calldata _desc) external onlyVoters {
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationStarted, 'Proposals are not allowed yet');
-        require(keccak256(abi.encode(_desc)) != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer'); // facultatif
-        // voir que desc est different des autres
+        require(keccak256(abi.encode(_desc)) != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer');
+        require(proposalsArray.length < MAX_SECURITY_PROPOSAL, 'Nombre Max. de propositions atteintes');	
 
         Proposal memory proposal;
         proposal.description = _desc;
