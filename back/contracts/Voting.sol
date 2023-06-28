@@ -107,6 +107,15 @@ contract Voting is Ownable {
       return bytes(str).length;
     }
 
+    function IsUniqueProposalWithHash( bytes32 hash) returns(bool) {
+        uint l = proposalsArray.length;
+        for( uint i; i < l; ){
+            if( hash != proposalsArray[i].hash ) { unchecked{ ++i}; continue; }
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @notice  Current voter add a proposal.
      * @dev     Add new proposal to the array of proposals, set it with dedicated info, then emit ProposalRegistered() event.
@@ -122,18 +131,9 @@ contract Voting is Ownable {
         require( length >= MIN_STRING_LENGTH, "Taille min. d'une proposition");   // to avoid stupid proposal
         
         bytes32 hash = keccak256(abi.encode(_desc));
-        require(hash != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer'); // facultatif
+        require(hash != keccak256(abi.encode("")), 'Votre proposition ne doit pas être nul'); // facultatif
 
-        // check if proposal is unique !
-        bool found;
-        
-        uint l = proposalsArray.length;
-        for( uint i; i < l; ++i){
-            if( hash != proposalsArray[i].hash ) { continue;}
-            found = true;
-            break;
-        }
-        require(!found, unicode'Cette proposition existe déjà!');
+        require(IsUniqueProposalWithHash(hash), unicode'Cette proposition existe déjà!');
 
         Proposal memory proposal;
         proposal.description = _desc;
