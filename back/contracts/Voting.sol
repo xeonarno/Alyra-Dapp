@@ -100,28 +100,8 @@ contract Voting is Ownable {
      * @param s The string to measure the length of
      * @return The length of the input string
      */
-    function strlen(string memory s) internal pure returns (uint256) {
-        uint256 len;
-        uint256 i;
-        uint256 bytelength = bytes(s).length;
-
-        for (; i < bytelength; len++) {
-            bytes1 b = bytes(s)[i];
-            if (b < 0x80) {
-                i += 1;
-            } else if (b < 0xE0) {
-                i += 2;
-            } else if (b < 0xF0) {
-                i += 3;
-            } else if (b < 0xF8) {
-                i += 4;
-            } else if (b < 0xFC) {
-                i += 5;
-            } else {
-                i += 6;
-            }
-        }
-        return len;
+    function strlen(string memory s1) public pure returns(uint256) {
+      return bytes(s1).length
     }
 
     /**
@@ -133,6 +113,7 @@ contract Voting is Ownable {
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationStarted, 'Proposals are not allowed yet');
         require(keccak256(abi.encode(_desc)) != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer');
         require(proposalsArray.length < MAX_SECURITY_PROPOSAL, 'Nombre Max. de propositions atteintes');	
+        require( strlen(_desc) < MAX_STRING_LENGTH, "Taille max. d'une proposition");   // to avoid gas consumption
 
         Proposal memory proposal;
         proposal.description = _desc;
