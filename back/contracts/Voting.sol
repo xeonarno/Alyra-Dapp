@@ -167,7 +167,7 @@ contract Voting is Ownable {
     }
 
     /**
-     * @notice  Allow evolution of workflow status from VotingSessionStarted to VotingSessionEnded.
+     * @notice  Allow change of workflow status from VotingSessionStarted to VotingSessionEnded.
      * @dev     Emit WorkflowStatusChange() event.
      */
     function endVotingSession() external onlyOwner {
