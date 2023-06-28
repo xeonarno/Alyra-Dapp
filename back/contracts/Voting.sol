@@ -99,11 +99,11 @@ contract Voting is Ownable {
      * @notice  Registered voter add a proposal.
      * @dev Returns the length of a given string
      *
-     * @param s The string to measure the length of
+     * @param str The string to measure the length of
      * @return The length of the input string
      */
-    function strlen(string memory s1) public pure returns(uint256) {
-      return bytes(s1).length
+    function strlen(string memory str) public pure returns(uint256) {
+      return bytes(str).length;
     }
 
     /**
