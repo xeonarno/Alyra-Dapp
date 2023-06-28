@@ -95,6 +95,17 @@ contract Voting is Ownable {
 
     /**
      * @notice  Registered voter add a proposal.
+     * @dev Returns the length of a given string
+     *
+     * @param s The string to measure the length of
+     * @return The length of the input string
+     */
+    function strlen(string memory s1) public pure returns(uint256) {
+      return bytes(s1).length
+    }
+
+    /**
+     * @notice  Current voter add a proposal.
      * @dev     Add new proposal to the array of proposals, set it with dedicated info, then emit ProposalRegistered() event.
      * @param   _desc  Proposal description.
      */
@@ -102,6 +113,7 @@ contract Voting is Ownable {
         require(workflowStatus == WorkflowStatus.ProposalsRegistrationStarted, 'Proposals are not allowed yet');
         require(keccak256(abi.encode(_desc)) != keccak256(abi.encode("")), 'Vous ne pouvez pas ne rien proposer');
         require(proposalsArray.length < MAX_SECURITY_PROPOSAL, 'Nombre Max. de propositions atteintes');	
+        require( strlen(_desc) < MAX_STRING_LENGTH, "Taille max. d'une proposition");   // to avoid gas consumption
 
         Proposal memory proposal;
         proposal.description = _desc;
