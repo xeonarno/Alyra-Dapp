@@ -41,8 +41,6 @@ contract Voting is Ownable {
     Proposal[] proposalsArray;
     mapping (address => Voter) voters;
     uint private tempWinningProposalID;
-    uint private tempWinningVoteCount;
-
 
     event VoterRegistered(address voterAddress); 
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
@@ -145,8 +143,7 @@ contract Voting is Ownable {
         voters[msg.sender].hasVoted = true;
         proposalsArray[_id].voteCount++;
 
-        if( proposalsArray[_id].voteCount > tempWinningVoteCount) {
-            tempWinningVoteCount = proposalsArray[_id].voteCount;
+        if( proposalsArray[_id].voteCount > proposalsArray[tempWinningProposalID].voteCount) {
             tempWinningProposalID = _id;
         }
 
