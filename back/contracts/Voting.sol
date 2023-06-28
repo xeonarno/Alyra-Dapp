@@ -94,7 +94,7 @@ contract Voting is Ownable {
     // ::::::::::::: PROPOSAL ::::::::::::: // 
 
     /**
-     * @notice  Current voter add a proposal.
+     * @notice  Registered voter add a proposal.
      * @dev     Add new proposal to the array of proposals, set it with dedicated info, then emit ProposalRegistered() event.
      * @param   _desc  Proposal description.
      */
