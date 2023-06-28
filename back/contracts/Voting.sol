@@ -112,7 +112,7 @@ contract Voting is Ownable {
     // ::::::::::::: VOTE ::::::::::::: //
 
     /**
-     * @notice  Allow for a legitim voter to vote for a proposal.
+     * @notice  Allow for a registered voter to vote for a proposal.
      * @dev     Legitim voter can vote for a proposal by its ID; adjust proposal & voter data; test for winning proposal; then emit Voted() event.
      * @param   _id  ID of the proposal.
      */
