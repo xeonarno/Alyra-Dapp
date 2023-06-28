@@ -132,7 +132,7 @@ contract Voting is Ownable {
 
 
     /**
-     * @notice  Allow evolution of workflow status from RegisteringVoters to ProposalsRegistrationStarted; Create the GENESIS proposal.
+     * @notice  Allow change of workflow status from RegisteringVoters to ProposalsRegistrationStarted; Create the basic proposal called GENESIS.
      * @dev     Emit WorkflowStatusChange() event.
      */
     function startProposalsRegistering() external onlyOwner {
