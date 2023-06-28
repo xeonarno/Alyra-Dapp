@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 /**
- * @author  XXX.
+ * @author  Franck Massand & Arnaud Palin Sainte Agathe.
  * @title   Allow to vote for proposals.
  * @dev     Contract owner add voters, who can add proposal to vote session and then vote for them.
  * @notice  Add voters; Add proposals; Then vote for a proposal.
