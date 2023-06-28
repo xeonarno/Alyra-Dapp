@@ -113,7 +113,7 @@ contract Voting is Ownable {
 
     /**
      * @notice  Allow for a registered voter to vote for a proposal.
-     * @dev     Legitim voter can vote for a proposal by its ID; adjust proposal & voter data; test for winning proposal; then emit Voted() event.
+     * @dev     registered voter can vote for a proposal based by its Id; emit Voted() event.
      * @param   _id  ID of the proposal.
      */
     function setVote( uint _id) external onlyVoters {
