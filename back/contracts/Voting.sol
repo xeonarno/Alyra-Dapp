@@ -178,7 +178,7 @@ contract Voting is Ownable {
 
 
     /**
-     * @notice  Allow evolution of workflow status from VotingSessionEnded to VotesTallied; Declare "officially" the winning proposal by its ID
+     * @notice  Allow change of workflow status from VotingSessionEnded to VotesTallied; Declare "officially" the winning proposal by its ID
      * @dev     Emit WorkflowStatusChange() event.
      */
     function tallyVotes() external onlyOwner {
