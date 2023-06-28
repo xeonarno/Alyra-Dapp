@@ -24,8 +24,9 @@ contract Voting is Ownable {
     }
 
     struct Proposal {
-        string description;
-        uint voteCount;
+        string  description;
+        uint    voteCount;
+        bytes32 hash;
     }
 
     enum  WorkflowStatus {
@@ -106,6 +107,15 @@ contract Voting is Ownable {
       return bytes(str).length;
     }
 
+    function IsUniqueProposalWithHash( bytes32 hash) returns(bool) {
+        uint l = proposalsArray.length;
+        for( uint i; i < l; ){
+            if( hash != proposalsArray[i].hash ) { unchecked{ ++i}; continue; }
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @notice  Current voter add a proposal.
      * @dev     Add new proposal to the array of proposals, set it with dedicated info, then emit ProposalRegistered() event.
@@ -119,9 +129,15 @@ contract Voting is Ownable {
         uint length = strlen(_desc);
         require( length < MAX_STRING_LENGTH, "Taille max. d'une proposition");   // to avoid gas consumption
         require( length >= MIN_STRING_LENGTH, "Taille min. d'une proposition");   // to avoid stupid proposal
+        
+        bytes32 hash = keccak256(abi.encode(_desc));
+        require(hash != keccak256(abi.encode("")), 'Votre proposition ne doit pas être nul'); // facultatif
+
+        require(IsUniqueProposalWithHash(hash), unicode'Cette proposition existe déjà!');
 
         Proposal memory proposal;
         proposal.description = _desc;
+        proposal.hash        = hash;
         proposalsArray.push(proposal);
         emit ProposalRegistered(proposalsArray.length-1);
     }
