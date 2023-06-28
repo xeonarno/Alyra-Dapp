@@ -111,7 +111,7 @@ contract Voting is Ownable {
     function IsUniqueProposalWithHash( bytes32 hash) returns(bool) {
         uint l = proposalsArray.length;
         for( uint i; i < l; ){
-            if( hash != proposalsArray[i].hash ) { unchecked{ ++i}; continue; }
+            if( hash != proposalsArray[i].hash ) { unchecked{ ++i;} continue; }
             return false;
         }
         return true;
