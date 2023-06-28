@@ -147,7 +147,7 @@ contract Voting is Ownable {
     }
 
     /**
-     * @notice  Allow evolution of workflow status from ProposalsRegistrationStarted to ProposalsRegistrationEnded.
+     * @notice  Allow change of workflow status from ProposalsRegistrationStarted to ProposalsRegistrationEnded.
      * @dev     Emit WorkflowStatusChange() event.
      */
     function endProposalsRegistering() external onlyOwner {
