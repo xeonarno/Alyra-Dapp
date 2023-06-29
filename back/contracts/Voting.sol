@@ -108,7 +108,7 @@ contract Voting is Ownable {
       return bytes(str).length;
     }
 
-    function IsUniqueProposalWithHash( bytes32 hash) returns(bool) {
+    function IsUniqueProposalWithHash( bytes32 hash) private view returns(bool) {
         uint l = proposalsArray.length;
         for( uint i; i < l; ){
             if( hash != proposalsArray[i].hash ) { unchecked{ ++i;} continue; }
@@ -132,7 +132,7 @@ contract Voting is Ownable {
         require( length >= MIN_STRING_LENGTH, "Taille min. d'une proposition");   // to avoid stupid proposal
         
         bytes32 hash = keccak256(abi.encode(_desc));
-        require(hash != keccak256(abi.encode("")), 'Votre proposition ne doit pas être nul'); // facultatif
+        require(hash != keccak256(abi.encode("")), unicode'Votre proposition ne doit pas être nul'); // facultatif
 
         require(IsUniqueProposalWithHash(hash), unicode'Cette proposition existe déjà!');
 
