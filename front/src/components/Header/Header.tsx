@@ -1,11 +1,9 @@
 "use client"
 
-const Header = () => {
-    return (
-      <header>
-        header
-      </header>
-    )
-  }
-
-  export default Header;
+export default function Header() {
+  return (
+    <header>
+      header
+    </header>
+  )
+}

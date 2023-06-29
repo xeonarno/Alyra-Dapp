@@ -3,19 +3,19 @@ import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
 import { Flex } from '@chakra-ui/react'
 
-import React, { FC } from 'react';
+import React from 'react';
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-const Layout: FC<LayoutProps> = ({ children }) => {
-  return (
+export default function Layout({ children }: LayoutProps) {
+  return(
     <Flex
-      direction="column"
-      h="100vh"
-      justifyContent="center"
-    >
+      direction = "column"
+      h = "100vh"
+      justifyContent = "center"
+      >
         <Header />
         <Flex
           grow="1"
@@ -27,5 +27,3 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     </Flex>
   )
 }
-
-export default Layout

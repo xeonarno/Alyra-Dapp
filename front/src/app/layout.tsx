@@ -12,19 +12,14 @@ import {
 
 import { publicProvider } from 'wagmi/providers/public';
 
-const { chains, publicClient } = configureChains([hardhat], [publicProvider()])
+const { chains, publicClient } = configureChains([hardhat], [publicProvider()]);
 const { connectors } = getDefaultWallets({ appName: "Voting App", projectId: "XXXXXX_TBD_XXXXXXXX", chains })
 
 const wagmiConfig = createConfig({
   autoConnect: false,
   connectors,
   publicClient
-})
-
-export const metadata = {
-  title: 'Voting app',
-  description: 'An Ethereum Voting app mecanism',
-}
+});
 
 export default function RootLayout({
   children,
