@@ -4,6 +4,7 @@ import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react';
 import { Heading } from '@chakra-ui/react';
 import { Stack, StackDivider } from '@chakra-ui/react';
 import AdminCardVoter from '../AdminCardVoter/AdminCardVoter';
+import { useEffect } from 'react';
 
 import { useVotersContext } from '@/context/voters';
 

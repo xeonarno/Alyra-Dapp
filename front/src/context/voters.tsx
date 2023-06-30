@@ -26,4 +26,3 @@ export const VotersContextProvider: React.FC<React.PropsWithChildren<any>> = ({ 
 };
 
 export const useVotersContext = ()=> useContext(VotersContext);
-
