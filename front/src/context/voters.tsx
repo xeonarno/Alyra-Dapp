@@ -1,11 +1,22 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 
-const VotersContext = createContext(null);
 
-export const VotersContextProvider = ({ children }) => {
+type Voters = string;
 
-	const [voters, setVoters] = useState([]);
+type VotersContextType = {
+	voters: Voters[],
+	setVoters: React.Dispatch<React.SetStateAction<Voters[]>>,
+}
+
+const VotersContext = createContext<VotersContextType>({
+	voters:[],
+	setVoters:()=>{}
+});
+
+export const VotersContextProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
+
+	const [voters, setVoters] = useState<Voters[]>([]);
 
 	return(
 		<VotersContext.Provider value={{ voters, setVoters }}>
@@ -15,3 +26,4 @@ export const VotersContextProvider = ({ children }) => {
 };
 
 export const useVotersContext = ()=> useContext(VotersContext);
+

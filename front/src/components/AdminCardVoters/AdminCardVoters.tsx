@@ -12,25 +12,6 @@ export default function AdminCardVoters() {
 
 	const { voters }  = useVotersContext();
 
-	var rows = [];
-
-	/*
-	for( let i = 0; i < voters.length; i++) {
-		rows.push( <AdminCardVoter key={i} num={i+1} address={voters[i]} /> );
-	}
-	console.log( "B "+voters);
-	*/
-	
-	useEffect(()=>{
-		rows = [];
-		for( let i = 0; i < voters.length; i++) {
-			rows.push( <AdminCardVoter key={i} num={i+1} address={voters[i]} /> );
-		}
-		console.log( "[LIST] "+voters);
-		console.log( "[LIST] "+rows);
-	},[voters]);
-	
-
 	return (
 		<Flex>
 			<Card width="100%">
@@ -40,10 +21,9 @@ export default function AdminCardVoters() {
 
 			<CardBody>
 				<Stack divider={<StackDivider />} spacing='4'>
-				{
-				/*rows*/
-				voters.map((voter,i)=> {<AdminCardVoter key={i} num={i+1} address={voter} />})
-				}
+				({
+				voters.map((voter,i)=> <AdminCardVoter key={i} num={i+1} address={voter} />)
+				})
 				</Stack>
 			</CardBody>
 			</Card>
