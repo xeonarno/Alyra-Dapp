@@ -15,7 +15,7 @@ import { publicProvider } from 'wagmi/providers/public';
 import { VotersContextProvider } from '@/context/voters';
 
 const { chains, publicClient } = configureChains([hardhat], [publicProvider()]);
-const { connectors } = getDefaultWallets({ appName: "Voting App", projectId: "58c04492c719d703985bce45898088b9", chains })
+const { connectors } = getDefaultWallets({ appName: "Voting App", projectId: "XXXXXXXXXXXXXXXXXXXXX", chains })
 
 const wagmiConfig = createConfig({
   autoConnect: false,
