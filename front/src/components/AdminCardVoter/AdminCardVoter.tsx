@@ -5,15 +5,13 @@ import { Text } from '@chakra-ui/react';
 
 export default function AdminCardVoter( { num, address }:any) {
   return (
-	<>
-		<Box>
-			<Heading size='xs' textTransform='uppercase'>
-			Voter #{ num }
-			</Heading>
-			<Text pt='2' fontSize='sm'>
-			⟠ { address }
-			</Text>
-		</Box>
-	</>
+	<Box>
+		<Heading size='xs' >
+		Voter #{ num }
+		</Heading>
+		<Text pt='2' fontSize='sm'>
+		⟠ { address }
+		</Text>
+	</Box>
   );
 }
