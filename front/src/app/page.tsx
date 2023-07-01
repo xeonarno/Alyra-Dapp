@@ -5,6 +5,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { Divider } from '@chakra-ui/react';
 import { Text } from "@chakra-ui/react";
 import { VStack, Box } from "@chakra-ui/react";
+
 import { useWorkflowContext } from '@/context/workflow';
 
 import { IconButton } from '@chakra-ui/react';
@@ -12,12 +13,16 @@ import { ArrowRightIcon, CloseIcon } from '@chakra-ui/icons';
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import { useToast } from '@chakra-ui/react'
 
+import { useState } from "react";
+
 
 export default function Home() {
 
+  const toast = useToast();
+
   const {workflowStatus,  setWorkflowStatus}  = useWorkflowContext();
 
-  const disp:string = [
+  const disp:string[] = [
     "RegisteringVoters",
     "ProposalsRegistrationStarted",
     "ProposalsRegistrationEnded",
@@ -26,8 +31,16 @@ export default function Home() {
     "VotesTallied"
   ];
 
-  const toast = useToast();
+  const [tabIndex] = useState(0);
 
+  const idx:number[] = [
+    0,
+    1,
+    1,
+    2,
+    2,
+    3
+  ];
 
   const nextStep = () => {
     if( workflowStatus >= 5) {
@@ -60,29 +73,34 @@ export default function Home() {
         </Text>
 
         <Box>
-          <Tabs size='lg'>
+          <Tabs size='lg' index={ idx[workflowStatus] }>
             <TabList>
-              <Tab>Admin</Tab>
+              {( workflowStatus <= 0 )? <Tab>Registration</Tab>: <Tab isDisabled>Registration</Tab>}
               {( workflowStatus == 1 )? <Tab>Proposals</Tab>: <Tab isDisabled>Proposals</Tab>}
               {( workflowStatus == 3 )? <Tab>Votes</Tab>: <Tab isDisabled>Votes</Tab>}
               {( workflowStatus >= 5 )? <Tab>Result</Tab>: <Tab isDisabled>Result</Tab>}
             </TabList>
 
             <TabPanels>
+
               <TabPanel>
-                <Text fontSize='2xl' as="b">Administration Page</Text>
+                <Text fontSize='2xl' as="b">Voters Registration</Text>
                 <Divider orientation='vertical' height='10px' />
                 <AdminTab />
               </TabPanel>
+
               <TabPanel>
-                <p>two!</p>
+                <p>Proposals</p>
               </TabPanel>
+
               <TabPanel>
-                <p>three!</p>
+                <p>Vote</p>
               </TabPanel>
+
               <TabPanel>
-                <p>four!</p>
+                <p>Result</p>
               </TabPanel>
+
             </TabPanels>
           </Tabs>
         </Box>

@@ -62,8 +62,8 @@ export default function AdminAddVoter() {
 	return (
 	<Flex width="100%">
 		<ButtonGroup isAttached colorScheme='blue'>
-			<IconButton onClick={ ()=> addVoterAddress()} aria-label='Add New Voter' icon={<AddIcon />} />
-			<Button onClick={ ()=> addVoterAddress()}>Add New Voter</Button>
+			<IconButton onClick={ e=> addVoterAddress(e)} aria-label='Add New Voter' icon={<AddIcon />} />
+			<Button onClick={ ()=> addVoterAddress(e)}>Add New Voter</Button>
 		</ButtonGroup>
 		<Input placeholder='Ethereum address...' width='auto' id="addressToAdd"
 			onChange={e => setAddress(e.target.value)}
