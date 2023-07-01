@@ -25,23 +25,17 @@ export default function AdminAddVoter() {
 		});
 	}
 
-/*
-0x99048293FA822B1C610979122BB987F072a62CcA
-0x1e3F30A3715D00A91de8dd819ceB75c444CDFD6D
-0xE82a021e583e2826488611b01CFe870ee051b9ac
-*/
 	const addVoterAddress = () => {
 
 		if( address.length !== 42) { ErrorToast("Incorrect Eth Address !"); return;}
 		if( address.slice(0,2) !== "0x") { ErrorToast("Incorrect Eth Address !"); return;}
 
 		// Addresses are uniques
-		/*
 		for( let i=0 ;i < voters.length; i++ ) {
 			if( voters[i].toLowerCase() !== address.toLowerCase()) { continue;}
 			ErrorToast("Address already registered !");
 			return;
-		}*/
+		}
 
 		setVoters( [...voters, address]);
 
@@ -63,7 +57,7 @@ export default function AdminAddVoter() {
 	<Flex width="100%">
 		<ButtonGroup isAttached colorScheme='blue'>
 			<IconButton onClick={ e=> addVoterAddress(e)} aria-label='Add New Voter' icon={<AddIcon />} />
-			<Button onClick={ ()=> addVoterAddress(e)}>Add New Voter</Button>
+			<Button onClick={ e=> addVoterAddress(e)}>Add New Voter</Button>
 		</ButtonGroup>
 		<Input placeholder='Ethereum address...' width='auto' id="addressToAdd"
 			onChange={e => setAddress(e.target.value)}

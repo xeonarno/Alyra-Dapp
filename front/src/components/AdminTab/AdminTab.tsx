@@ -10,9 +10,9 @@ export default function AdminTab() {
   // https://chakra-ui.com/docs/components/box
   return (
     <Container>
-		<AdminAddVoter />
-		<Divider orientation='vertical' height='10px' />
-		<AdminCardVoters />
+      <AdminAddVoter />
+      <Divider orientation='vertical' height='10px' />
+      <AdminCardVoters />
     </Container>
   );
 }
