@@ -12,7 +12,8 @@ import {
 
 import { publicProvider } from 'wagmi/providers/public';
 
-import { VotersContextProvider } from '@/context/voters';
+import { GlobalContextProvider } from '@/context/global';
+import { WorkflowStatusContextProvider } from '@/context/workflow';
 
 const { chains, publicClient } = configureChains([hardhat], [publicProvider()]);
 const { connectors } = getDefaultWallets({ appName: "Voting App", projectId: "XXXXXXXXXXXXXXXXXXXXX", chains })
@@ -34,9 +35,11 @@ export default function RootLayout({
         <WagmiConfig config={wagmiConfig}>
           <RainbowKitProvider chains={chains}>
             <ChakraProvider>
-              <VotersContextProvider>
-                {children}
-              </VotersContextProvider>
+              <GlobalContextProvider>
+                <WorkflowStatusContextProvider>
+                  {children}
+                </WorkflowStatusContextProvider>
+              </GlobalContextProvider>
             </ChakraProvider>
           </RainbowKitProvider>
         </WagmiConfig>
