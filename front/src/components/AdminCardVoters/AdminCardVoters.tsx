@@ -5,11 +5,11 @@ import { Heading } from '@chakra-ui/react';
 import { Stack, StackDivider } from '@chakra-ui/react';
 import AdminCardVoter from '../AdminCardVoter/AdminCardVoter';
 
-import { useVotersContext } from '@/context/voters';
+import { useGlobalContext } from '@/context/global';
 
 export default function AdminCardVoters() {
 
-	const { voters }  = useVotersContext();
+	const { voters } = useGlobalContext();
 
 	return (
 		<Flex>
@@ -32,9 +32,7 @@ export default function AdminCardVoters() {
 }
 
 /*
-
 0x99048293FA822B1C610979122BB987F072a62CcA
 0x1e3F30A3715D00A91de8dd819ceB75c444CDFD6D
 0xE82a021e583e2826488611b01CFe870ee051b9ac
-
 */
