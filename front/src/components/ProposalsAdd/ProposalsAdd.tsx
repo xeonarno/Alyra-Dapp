@@ -4,19 +4,18 @@ import { Flex } from '@chakra-ui/react';
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import { IconButton } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-
-import { Input } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 
 import { Container } from '@chakra-ui/react';
 import { Divider } from '@chakra-ui/react';
 import { Select } from '@chakra-ui/react'
-import { Box } from '@chakra-ui/react';
 import { Textarea } from '@chakra-ui/react'
 
 import { useState } from 'react';
-import { useGlobalContext } from '@/context/global';
 
+import { useGlobalContext } from '@/context/global';
 import { useWorkflowContext } from '@/context/workflow';
+import { useProposalContext } from '@/context/proposals';
 
 export default function ProposalsAdd() {
 
@@ -26,8 +25,20 @@ export default function ProposalsAdd() {
 	const [voterIndex, setVoterIndex] = useState(-1);
 	const [proposalText, setProposalTextVoterIndex] = useState("");
 
+	const {proposals,  setProposals}  = useProposalContext();
+
+	const toast = useToast();
 
 	const addProposal = () => {
+		setProposals( [...proposals, { description:proposalText, voteCount:0}]);
+		toast({
+			title      : 'Success !',
+			description: "Proposal is registered !",
+			status     : 'success',
+			duration   : 4500,
+			isClosable : true,
+		});
+
 	};
 /*
 0x99048293FA822B1C610979122BB987F072a62CcA
@@ -59,7 +70,6 @@ export default function ProposalsAdd() {
 		/>
 
 		<Divider orientation='horizontal' height='10px' />
-
     </Container>
 
 
