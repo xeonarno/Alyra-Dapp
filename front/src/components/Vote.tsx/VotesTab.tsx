@@ -4,6 +4,7 @@ import { Container } from '@chakra-ui/react';
 import { Divider } from '@chakra-ui/react';
 import { Select } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 
 import { useState } from 'react';
 
@@ -19,9 +20,32 @@ export default function VotesTab() {
 	const [proposalIndex, setProposalIndex] = useState("");
 	const {proposals,  setProposals}  = useProposalContext();
 
+  const toast = useToast();
+
   const vote = () => {
-    // TODO
+		toast({ description: 'Transaction in progress...' });
+		delay(1500).then(() => {
+			getApiVote();
+		});
 	};
+
+	function delay(ms:number) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	const getApiVote = () => {
+
+    // TODO
+
+		toast({
+			title      : 'Success !',
+			description: "Vote is recorded",
+			status     : 'success',
+			duration   : 4500,
+			isClosable : true,
+		});
+
+	}
 
   return (
     <Container>

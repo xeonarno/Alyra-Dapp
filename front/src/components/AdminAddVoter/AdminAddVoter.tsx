@@ -37,10 +37,24 @@ export default function AdminAddVoter() {
 			return;
 		}
 
+		toast({ description: 'Transaction in progress...' });
+		delay(1500).then(() => {
+			getApiAddVoter();
+		});
+
+	};
+
+	function delay(ms:number) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	const getApiAddVoter = () => {
+
 		setVoters( [...voters, {
-			hasVoted:false, votedProposalId:0, address:address
+			hasVoted       : false,
+			votedProposalId: 0,
+			address        : address
 		}]);
-		//setVoters( [...voters, address]);
 
 		toast({
 			title      : 'Success !',
@@ -50,7 +64,7 @@ export default function AdminAddVoter() {
 			isClosable : true,
 		});
 
-	};
+	}
 	
 	// https://chakra-ui.com/docs/components/button
 	// https://chakra-ui.com/docs/components/icon

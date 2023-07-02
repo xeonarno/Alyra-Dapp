@@ -177,11 +177,33 @@ export default function Home() {
       return;
     }
 
-    setWorkflowStatus(workflowStatus + 1);
+		toast({ description: 'Transaction in progress...' });
+		delay(1500).then(() => {
+			getAPiNextStep();
+		});
+    //setWorkflowStatus(workflowStatus + 1);
     //console.log(workflowStatus);
   };
 
+	function delay(ms:number) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
 
+
+	const getAPiNextStep = () => {
+
+    setWorkflowStatus(workflowStatus + 1);
+    //console.log(workflowStatus);
+
+		toast({
+			title      : 'Success !',
+			description: disp[workflowStatus+1],
+			status     : 'success',
+			duration   : 4500,
+			isClosable : true,
+		});
+
+	}
   // https://chakra-ui.com/docs/components/tabs/usage
   // https://chakra-ui.com/docs/components/stepper/usage
   return (
