@@ -63,7 +63,7 @@ export default function Home() {
       <VStack>
         <Text fontSize='2xl' as="b" >
           <ButtonGroup  colorScheme={( workflowStatus >= 5)? 'red': 'blue'}>
-            <Button width='450px' onClick={ ()=> nextStep()}>{ disp[workflowStatus] }</Button>
+            <Button width='450px' onClick={ ()=> nextStep()}>{ disp[workflowStatus] } </Button>
             <IconButton onClick={ ()=> nextStep()} aria-label='Next Step' icon={( workflowStatus < 5)? <ArrowRightIcon /> : <CloseIcon /> } />
           </ButtonGroup>
         </Text>

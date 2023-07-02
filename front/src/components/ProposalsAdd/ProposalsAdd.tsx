@@ -63,8 +63,9 @@ export default function ProposalsAdd() {
 			onChange={e => setVoterIndex(e.target.value)}
 		>
 		({
-			voters.map((voter,i)=>
-				<option key={i} value={i} >⟠ {voter}</option>
+			//voters.map((voter,i)=>
+			voters.filter(v => {if(v.hasVoted === false) return v;}).map((voter,i)=>
+				<option key={i} value={i} >⟠ {voter.address}</option>
 			)
 		})
 		</Select>

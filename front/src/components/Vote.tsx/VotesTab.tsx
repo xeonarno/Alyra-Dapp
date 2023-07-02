@@ -19,27 +19,8 @@ export default function VotesTab() {
 	const [proposalIndex, setProposalIndex] = useState("");
 	const {proposals,  setProposals}  = useProposalContext();
 
-  const addProposal = () => {
-    /*
-		if( voterIndex.length <= 0) {
-			toast({
-				title      : 'NO',
-				description: "Select a voter, before propose !",
-				status     : 'error',
-				duration   : 4500,
-				isClosable : true,
-			});
-			return;
-		}
-		setProposals( [...proposals, { description:proposalText, voteCount:0}]);
-		toast({
-			title      : 'Success !',
-			description: "Proposal is registered !",
-			status     : 'success',
-			duration   : 4500,
-			isClosable : true,
-		});
-    */
+  const vote = () => {
+    // TODO
 	};
 
   return (
@@ -50,7 +31,7 @@ export default function VotesTab() {
       >
       ({
         voters.map((voter,i)=>
-          <option key={i} value={i} >⟠ {voter}</option>
+          <option key={i} value={i} >⟠ {voter.address}</option>
         )
       })
       </Select>
@@ -71,7 +52,7 @@ export default function VotesTab() {
 
       <Divider orientation='horizontal' height='10px' />
 
-			<Button onClick={ e=> vote(e)} colorScheme='blue' width='100%' >VOTE</Button>
+			<Button onClick={ e=> vote(e)} colorScheme='blue' width='100%' isDisabled={(workflowStatus == 3)? false: true} >VOTE</Button>
 
     </Container>
   )

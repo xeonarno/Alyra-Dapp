@@ -2,7 +2,12 @@
 import React, { createContext, useContext, useState } from "react";
 
 
-type Voters = string;
+//type Voters = string;
+type Voters = {
+	hasVoted: boolean;
+	votedProposalId: number;
+	address: string;
+};
 
 type GlobalContextType = {
 	voters: Voters[],

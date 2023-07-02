@@ -10,13 +10,13 @@ import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react';
 import { Heading } from '@chakra-ui/react';
 import { Stack, StackDivider } from '@chakra-ui/react';
 
-import { useGlobalContext } from '@/context/global';
+//-import { useGlobalContext } from '@/context/global';
 import { useProposalContext } from '@/context/proposals';
 
 export default function ProposalsList() {
 
 
-  const {voters,  setVoters}  = useGlobalContext();
+  //-const {voters,  setVoters}  = useGlobalContext();
 	const {proposals,  setProposals}  = useProposalContext();
 
   function ProposalCard( { num, proposal }:any) {

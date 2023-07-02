@@ -32,12 +32,15 @@ export default function AdminAddVoter() {
 
 		// Addresses are uniques
 		for( let i=0 ;i < voters.length; i++ ) {
-			if( voters[i].toLowerCase() !== address.toLowerCase()) { continue;}
+			if( voters[i].address.toLowerCase() !== address.toLowerCase()) { continue;}
 			ErrorToast("Address already registered !");
 			return;
 		}
 
-		setVoters( [...voters, address]);
+		setVoters( [...voters, {
+			hasVoted:false, votedProposalId:0, address:address
+		}]);
+		//setVoters( [...voters, address]);
 
 		toast({
 			title      : 'Success !',
