@@ -180,7 +180,7 @@ export default function Home() {
 
 		toast({ description: 'Transaction in progress...' });
 		delay(1500).then(() => {
-			getAPiNextStep();
+			getApiNextStep();
 		});
     //setWorkflowStatus(workflowStatus + 1);
     //console.log(workflowStatus);
@@ -191,7 +191,7 @@ export default function Home() {
 	}
 
 
-	const getAPiNextStep = () => {
+	const getApiNextStep = () => {
 
     setWorkflowStatus(workflowStatus + 1);
     //console.log(workflowStatus);

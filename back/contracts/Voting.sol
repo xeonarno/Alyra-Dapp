@@ -78,7 +78,6 @@ contract Voting is Ownable {
         return proposalsArray[_id];
     }
 
- 
     // ::::::::::::: REGISTRATION ::::::::::::: // 
 
     /**
