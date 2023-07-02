@@ -3,6 +3,7 @@ import Layout from "@/components/Layout/Layout";
 import AdminTab from "@/components/AdminTab/AdminTab";
 import ProposalsTab from "@/components/ProposalsTab/ProposalTabs";
 import VotesTab from "@/components/Vote.tsx/VotesTab";
+import ResultTab from "@/components/ResultTab/ResultTab";
 
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { Divider } from '@chakra-ui/react';
@@ -246,7 +247,9 @@ export default function Home() {
               </TabPanel>
 
               <TabPanel>
-                <p>Result</p>
+                <Text fontSize='2xl' as="b">Result</Text>
+                <Divider orientation='vertical' height='10px' />
+                <ResultTab />
               </TabPanel>
 
             </TabPanels>
