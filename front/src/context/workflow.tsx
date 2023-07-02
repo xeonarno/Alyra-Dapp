@@ -1,14 +1,8 @@
 "use client";
+import WorkflowStatus from "@/enum/WorkflowStatus";
 import React, { createContext, useContext, useState } from "react";
 
-enum WorkflowStatus {
-	RegisteringVoters,
-	ProposalsRegistrationStarted,
-	ProposalsRegistrationEnded,
-	VotingSessionStarted,
-	VotingSessionEnded,
-	VotesTallied
-};
+
 /*
 enum WorkflowStatus {
 	RegisteringVoters            = "RegisteringVoters",
