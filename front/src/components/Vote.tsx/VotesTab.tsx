@@ -76,7 +76,7 @@ export default function VotesTab() {
 
       <Divider orientation='horizontal' height='10px' />
 
-			<Button onClick={ e=> vote(e)} colorScheme='blue' width='100%' isDisabled={(workflowStatus == 3)? false: true} >VOTE</Button>
+			<Button onClick={ ()=> vote()} colorScheme='blue' width='100%' isDisabled={(workflowStatus == 3)? false: true} >VOTE</Button>
 
     </Container>
   )

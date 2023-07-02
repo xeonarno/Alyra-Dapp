@@ -88,8 +88,8 @@ export default function ProposalsAdd() {
 		<Divider orientation='horizontal' height='10px' />
 
 		<ButtonGroup width='100%' isAttached colorScheme='blue' isDisabled={(workflowStatus == 1)? false: true}>
-			<IconButton onClick={ e=> addProposal(e)} aria-label='Add New Proposal' icon={<AddIcon />} />
-			<Button onClick={ e=> addProposal(e)}>Add New Proposal</Button>
+			<IconButton onClick={ ()=> addProposal()} aria-label='Add New Proposal' icon={<AddIcon />} />
+			<Button onClick={ ()=> addProposal()}>Add New Proposal</Button>
 		</ButtonGroup>
 		<Textarea placeholder=''
 			isDisabled={(workflowStatus == 1)? false: true}
