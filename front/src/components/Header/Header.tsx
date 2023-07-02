@@ -1,9 +1,22 @@
 "use client"
+import React from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { Flex, Text } from "@chakra-ui/react"
 
-export default function Header() {
+
+const Header = () => {
   return (
-    <header>
-      header
-    </header>
-  )
+    <Flex
+      p="2rem"
+      justifyContent="space-between"
+      alignItems="center"
+      width="100%"
+      h="15vh"
+    >
+      <Text>Logo</Text>
+
+      <ConnectButton />
+    </Flex>
+  );
 }
+export default Header
