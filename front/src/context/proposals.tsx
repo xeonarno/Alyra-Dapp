@@ -1,11 +1,6 @@
 "use client";
+import Proposals from "@/enum/Proposal";
 import React, { createContext, useContext, useState } from "react";
-
-
-type Proposals = {
-	description: string;
-	voteCount:   number;
-};
 
 type ProposalContextType = {
 	proposals: Proposals[],
@@ -17,7 +12,6 @@ const ProposalContext = createContext<ProposalContextType>({
 	setProposals:()=>{}
 });
 
-
 export const ProposalContextProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
 
 	const [proposals, setProposals] = useState<Proposals[]>([]);
@@ -27,7 +21,6 @@ export const ProposalContextProvider: React.FC<React.PropsWithChildren<any>> = (
 			{ children }
 		</ProposalContext.Provider>
 	);
-
 };
 
 export const useProposalContext = ()=> useContext(ProposalContext);

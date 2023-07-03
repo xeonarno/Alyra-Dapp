@@ -3,16 +3,6 @@ import WorkflowStatus from "@/enum/WorkflowStatus";
 import React, { createContext, useContext, useState } from "react";
 
 
-/*
-enum WorkflowStatus {
-	RegisteringVoters            = "RegisteringVoters",
-	ProposalsRegistrationStarted = "ProposalsRegistrationStarted",
-	ProposalsRegistrationEnded   = "ProposalsRegistrationEnded",
-	VotingSessionStarted         = "VotingSessionStarted",
-	VotingSessionEnded           = "VotingSessionEnded",
-	VotesTallied                 = "VotesTallied"
-};
-*/
 type WorkflowStatusContextType = {
 	workflowStatus:WorkflowStatus,
 	setWorkflowStatus: React.Dispatch<React.SetStateAction<WorkflowStatus>>,

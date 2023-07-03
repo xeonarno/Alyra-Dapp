@@ -19,128 +19,29 @@ import { useToast } from '@chakra-ui/react'
 
 import { useCallback, useEffect, useState } from "react";
 
-import { Address, useAccount, usePrepareContractWrite, usePublicClient } from 'wagmi';
-import { prepareWriteContract, writeContract, readContract } from '@wagmi/core';
-import Contract from '../../public/Voting.json';
+import { useAccount } from 'wagmi';
 
 import WorkflowStatus from "@/enum/WorkflowStatus";
-import { waitForTransactionReceipt } from "viem/dist/types/actions/public/waitForTransactionReceipt";
+import { useContract } from "@/context";
 
 
 export default function Home() {
-
-
-  const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
   const { isConnected } = useAccount();
-
-  // const setFavoriteNumber = async () => {
-  //   try {
-  //     const { request } = await prepareWriteContract({
-  //       address: contractAddress,
-  //       abi: Contract.abi,
-  //       functionName: "setNumber",
-  //       args: [number]
-  //     });
-  //     const { hash } = await writeContract(request);
-  //     await getDatas()
-  //     return hash;
-  //   } catch (err: any) {
-  //     console.log(err.message)
-  //   }
-  // }
-
-  // const getDatas = async () => {
-  //   try {
-  //     const data = await readContract({
-  //       address: contractAddress,
-  //       abi: Contract.abi,
-  //       functionName: "getNumber",
-  //     }) as Numeric;
-  //     console.log({ data });
-  //     setGetNumber(data.toString())
-  //   } catch (err: any) {
-  //     console.log(err.message)
-  //   }
-  // }
-
-  // const { config } = usePrepareContractWrite({
-  //   address: '0xFBA3912Ca04dd458c843e2EE08967fC04f3579c2',
-  //   abi: [
-  //     {
-  //       name: 'mint',
-  //       type: 'function',
-  //       stateMutability: 'nonpayable',
-  //       inputs: [],
-  //       outputs: [],
-  //     },
-  //   ],
-  //   functionName: 'mint',
-  // })
-  // const { data, write } = useContractWrite(config)
-
-  // const { isLoading, isSuccess } = useWaitForTransaction({
-  //   hash: data?.hash,
-  // })
-
-  const publicClient = usePublicClient();
-  const { address } = useAccount();
-
-  const isAlreadyRegistred = async (address: Address | undefined): Promise<boolean> => {
-    try {
-
-      console.log(`Ask for address : ${address}`);
-      const registered = await readContract({
-        address: contractAddress,
-        abi: Contract.abi,
-        functionName: "getVoter",
-        args: [address]
-      }) as String;
-      console.log('registered', { registered })
-
-      return !!registered;
-
-    } catch (error) {
-      return false;
-    }
-  }
+  const toast = useToast();
+  const { workflowStatus, setWorkflowStatus } = useWorkflowContext();
+  const { getStatus } = useContract();
 
   const getWorkflow = async () => {
-    try {
-
-      const data = await readContract({
-
-        address: contractAddress,
-        abi: Contract.abi,
-        functionName: "workflowStatus",
-      }) as WorkflowStatus;
-      console.log('workflowStatus', { data });
-
-
-      const registered = await isAlreadyRegistred(address);
-
-      if(!registered){
-        const config = await prepareWriteContract({
-          address: contractAddress,
-          abi: Contract.abi,
-          functionName: "addVoter",
-          args: [address]
-        });
-        console.log('order', { config });
-
-        const { hash } = await writeContract(config);
-        console.log('hash', { hash });
-        // Check
-        const registered = await isAlreadyRegistred(address);
-        if(!registered) {
-          console.error('Problem with registration ! ');
-        }
-      }
-    } catch (err: any) {
-      console.error(err);
-    }
+    // Activate mode admin
   };
 
   useEffect(() => {
+    const reachStatus = async () => {
+      const status = await getStatus();
+      setWorkflowStatus(status);
+    }
+    reachStatus();
+    
     if (isConnected) {
       getWorkflow();
     }
@@ -148,10 +49,6 @@ export default function Home() {
 
 
   ///////////////////////////////////////////////
-
-  const toast = useToast();
-
-  const { workflowStatus, setWorkflowStatus } = useWorkflowContext();
 
   const disp: string[] = [
     "RegisteringVoters",
@@ -179,16 +76,13 @@ export default function Home() {
     }
 
 		toast({ description: 'Transaction in progress...' });
-		delay(1500).then(() => {
+	
 			getApiNextStep();
-		});
+	
     //setWorkflowStatus(workflowStatus + 1);
     //console.log(workflowStatus);
   };
 
-	function delay(ms:number) {
-		return new Promise(resolve => setTimeout(resolve, ms));
-	}
 
 
 	const getApiNextStep = () => {

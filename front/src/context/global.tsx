@@ -1,13 +1,7 @@
 "use client";
+import Voters from "@/enum/Voter";
 import React, { createContext, useContext, useState } from "react";
 
-
-//type Voters = string;
-type Voters = {
-	hasVoted: boolean;
-	votedProposalId: number;
-	address: string;
-};
 
 type GlobalContextType = {
 	voters: Voters[],
@@ -18,7 +12,6 @@ const GlobalContext = createContext<GlobalContextType>({
 	voters:[],
 	setVoters:()=>{}
 });
-
 
 
 export const GlobalContextProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {

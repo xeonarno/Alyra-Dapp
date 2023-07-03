@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { useGlobalContext } from '@/context/global';
 import { useWorkflowContext } from '@/context/workflow';
 import { useProposalContext } from '@/context/proposals';
+import { useContract } from '@/context';
 
 export default function ProposalsAdd() {
 
@@ -26,10 +27,11 @@ export default function ProposalsAdd() {
 	const [voterIndex, setVoterIndex] = useState("");
 	const [proposalText, setProposalText] = useState("");
 
+	const { addProposal } = useContract();
 
 	const toast = useToast();
 
-	const addProposal = () => {
+	const addNewProposal = () => {
 		if( voterIndex.length <= 0) {
 			toast({
 				title      : 'NO',
@@ -41,17 +43,15 @@ export default function ProposalsAdd() {
 			return;
 		}
 		toast({ description: 'Transaction in progress...' });
-		delay(1500).then(() => {
-			getApiAddProposal();
-		});
-
+		
+		getApiAddProposal();
 	};
 
-	function delay(ms:number) {
-		return new Promise(resolve => setTimeout(resolve, ms));
-	}
+	const getApiAddProposal = async () => {
 
-	const getApiAddProposal = () => {
+		await addProposal(proposalText);
+
+
 
 		setProposals( [...proposals, {
 			description: proposalText,
@@ -65,7 +65,6 @@ export default function ProposalsAdd() {
 			duration   : 4500,
 			isClosable : true,
 		});
-
 	}
 /*
 0x99048293FA822B1C610979122BB987F072a62CcA
@@ -80,7 +79,7 @@ export default function ProposalsAdd() {
 			onChange={e => setVoterIndex(e.target.value)}
 		>
 		({
-			voters.filter(v => {if(v.hasVoted === false) return v;}).map((voter,i)=>
+			voters.filter(({hasVoted}) => hasVoted).map((voter,i)=>
 				<option key={i} value={i} >⟠ {voter.address}</option>
 			)
 		})
@@ -88,8 +87,8 @@ export default function ProposalsAdd() {
 		<Divider orientation='horizontal' height='10px' />
 
 		<ButtonGroup width='100%' isAttached colorScheme='blue' isDisabled={(workflowStatus == 1)? false: true}>
-			<IconButton onClick={ ()=> addProposal()} aria-label='Add New Proposal' icon={<AddIcon />} />
-			<Button onClick={ ()=> addProposal()}>Add New Proposal</Button>
+			<IconButton onClick={ ()=> addNewProposal()} aria-label='Add New Proposal' icon={<AddIcon />} />
+			<Button onClick={ ()=> addNewProposal()}>Add New Proposal</Button>
 		</ButtonGroup>
 		<Textarea placeholder=''
 			isDisabled={(workflowStatus == 1)? false: true}
