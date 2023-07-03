@@ -2,9 +2,11 @@
 import React from "react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Flex, Text } from "@chakra-ui/react"
+import { useAccount } from "wagmi";
 
 
 const Header = () => {
+  const { isConnected } = useAccount()
   return (
     <Flex
       p="2rem"
@@ -15,7 +17,7 @@ const Header = () => {
     >
       <Text>Logo</Text>
 
-      <ConnectButton />
+      {isConnected && <ConnectButton />}
     </Flex>
   );
 }
