@@ -40,7 +40,24 @@ export default function ProposalsAdd() {
 			});
 			return;
 		}
-		setProposals( [...proposals, { description:proposalText, voteCount:0}]);
+		toast({ description: 'Transaction in progress...' });
+		delay(1500).then(() => {
+			getApiAddProposal();
+		});
+
+	};
+
+	function delay(ms:number) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	const getApiAddProposal = () => {
+
+		setProposals( [...proposals, {
+			description: proposalText,
+			voteCount  : 0
+		}]);
+
 		toast({
 			title      : 'Success !',
 			description: "Proposal is registered !",
@@ -49,7 +66,7 @@ export default function ProposalsAdd() {
 			isClosable : true,
 		});
 
-	};
+	}
 /*
 0x99048293FA822B1C610979122BB987F072a62CcA
 0x1e3F30A3715D00A91de8dd819ceB75c444CDFD6D
@@ -63,17 +80,16 @@ export default function ProposalsAdd() {
 			onChange={e => setVoterIndex(e.target.value)}
 		>
 		({
-			//voters.map((voter,i)=>
 			voters.filter(v => {if(v.hasVoted === false) return v;}).map((voter,i)=>
 				<option key={i} value={i} >⟠ {voter.address}</option>
 			)
 		})
 		</Select>
 		<Divider orientation='horizontal' height='10px' />
-		
+
 		<ButtonGroup width='100%' isAttached colorScheme='blue' isDisabled={(workflowStatus == 1)? false: true}>
-			<IconButton onClick={ e=> addProposal(e)} aria-label='Add New Proposal' icon={<AddIcon />} />
-			<Button onClick={ e=> addProposal(e)}>Add New Proposal</Button>
+			<IconButton onClick={ ()=> addProposal()} aria-label='Add New Proposal' icon={<AddIcon />} />
+			<Button onClick={ ()=> addProposal()}>Add New Proposal</Button>
 		</ButtonGroup>
 		<Textarea placeholder=''
 			isDisabled={(workflowStatus == 1)? false: true}

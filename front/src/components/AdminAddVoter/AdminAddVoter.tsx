@@ -37,10 +37,24 @@ export default function AdminAddVoter() {
 			return;
 		}
 
+		toast({ description: 'Transaction in progress...' });
+		delay(1500).then(() => {
+			getApiAddVoter();
+		});
+
+	};
+
+	function delay(ms:number) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	const getApiAddVoter = () => {
+
 		setVoters( [...voters, {
-			hasVoted:false, votedProposalId:0, address:address
+			hasVoted       : false,
+			votedProposalId: 0,
+			address        : address
 		}]);
-		//setVoters( [...voters, address]);
 
 		toast({
 			title      : 'Success !',
@@ -50,7 +64,7 @@ export default function AdminAddVoter() {
 			isClosable : true,
 		});
 
-	};
+	}
 	
 	// https://chakra-ui.com/docs/components/button
 	// https://chakra-ui.com/docs/components/icon
@@ -59,8 +73,8 @@ export default function AdminAddVoter() {
 	return (
 	<Flex width="100%">
 		<ButtonGroup isAttached colorScheme='blue'>
-			<IconButton onClick={ e=> addVoterAddress(e)} aria-label='Add New Voter' icon={<AddIcon />} />
-			<Button onClick={ e=> addVoterAddress(e)}>Add New Voter</Button>
+			<IconButton onClick={ ()=> addVoterAddress()} aria-label='Add New Voter' icon={<AddIcon />} />
+			<Button onClick={ ()=> addVoterAddress()}>Add New Voter</Button>
 		</ButtonGroup>
 		<Input placeholder='Ethereum address...' width='auto' id="addressToAdd"
 			onChange={e => setAddress(e.target.value)}
