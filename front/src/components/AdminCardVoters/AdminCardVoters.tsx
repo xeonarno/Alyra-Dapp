@@ -21,7 +21,7 @@ export default function AdminCardVoters() {
 			<CardBody>
 				<Stack divider={<StackDivider />} spacing='4'>
 				({
-				voters.map((voter,i)=> <AdminCardVoter key={i} num={i+1} address={voter} />)
+				voters.map((voter,i)=> <AdminCardVoter key={i} num={i+1} address={voter.address} />)
 				})
 				</Stack>
 			</CardBody>

@@ -2,6 +2,7 @@
 import Layout from "@/components/Layout/Layout";
 import AdminTab from "@/components/AdminTab/AdminTab";
 import ProposalsTab from "@/components/ProposalsTab/ProposalTabs";
+import VotesTab from "@/components/Vote.tsx/VotesTab";
 
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { Divider } from '@chakra-ui/react';
@@ -62,7 +63,7 @@ export default function Home() {
       <VStack>
         <Text fontSize='2xl' as="b" >
           <ButtonGroup  colorScheme={( workflowStatus >= 5)? 'red': 'blue'}>
-            <Button width='450px' onClick={ ()=> nextStep()}>{ disp[workflowStatus] }</Button>
+            <Button width='450px' onClick={ ()=> nextStep()}>{ disp[workflowStatus] } </Button>
             <IconButton onClick={ ()=> nextStep()} aria-label='Next Step' icon={( workflowStatus < 5)? <ArrowRightIcon /> : <CloseIcon /> } />
           </ButtonGroup>
         </Text>
@@ -91,7 +92,9 @@ export default function Home() {
               </TabPanel>
 
               <TabPanel>
-                <p>Vote</p>
+                <Text fontSize='2xl' as="b">Vote !</Text>
+                <Divider orientation='vertical' height='10px' />
+                <VotesTab />
               </TabPanel>
 
               <TabPanel>

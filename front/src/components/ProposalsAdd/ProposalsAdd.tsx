@@ -21,15 +21,25 @@ export default function ProposalsAdd() {
 
 	const {voters,  setVoters}  = useGlobalContext();
 	const {workflowStatus,  setWorkflowStatus}  = useWorkflowContext();
-
-	const [voterIndex, setVoterIndex] = useState(-1);
-	const [proposalText, setProposalTextVoterIndex] = useState("");
-
 	const {proposals,  setProposals}  = useProposalContext();
+
+	const [voterIndex, setVoterIndex] = useState("");
+	const [proposalText, setProposalText] = useState("");
+
 
 	const toast = useToast();
 
 	const addProposal = () => {
+		if( voterIndex.length <= 0) {
+			toast({
+				title      : 'NO',
+				description: "Select a voter, before propose !",
+				status     : 'error',
+				duration   : 4500,
+				isClosable : true,
+			});
+			return;
+		}
 		setProposals( [...proposals, { description:proposalText, voteCount:0}]);
 		toast({
 			title      : 'Success !',
@@ -53,25 +63,24 @@ export default function ProposalsAdd() {
 			onChange={e => setVoterIndex(e.target.value)}
 		>
 		({
-			voters.map((voter,i)=>
-				<option key={i} value={i} >⟠ {voter}</option>
+			//voters.map((voter,i)=>
+			voters.filter(v => {if(v.hasVoted === false) return v;}).map((voter,i)=>
+				<option key={i} value={i} >⟠ {voter.address}</option>
 			)
 		})
 		</Select>
 		<Divider orientation='horizontal' height='10px' />
-
+		
 		<ButtonGroup width='100%' isAttached colorScheme='blue' isDisabled={(workflowStatus == 1)? false: true}>
 			<IconButton onClick={ e=> addProposal(e)} aria-label='Add New Proposal' icon={<AddIcon />} />
 			<Button onClick={ e=> addProposal(e)}>Add New Proposal</Button>
 		</ButtonGroup>
 		<Textarea placeholder=''
 			isDisabled={(workflowStatus == 1)? false: true}
-			onChange={e => setProposalTextVoterIndex(e.target.value)}
+			onChange={e => setProposalText(e.target.value)}
 		/>
 
-		<Divider orientation='horizontal' height='10px' />
     </Container>
-
-
   )
+
 }
