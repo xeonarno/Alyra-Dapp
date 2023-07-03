@@ -62,14 +62,11 @@ export default function AdminAddVoter() {
 			status     : 'success',
 			duration   : 4500,
 			isClosable : true,
+			position   : 'top',
 		});
 
 	}
 	
-	// https://chakra-ui.com/docs/components/button
-	// https://chakra-ui.com/docs/components/icon
-	// https://chakra-ui.com/docs/components/input
-	// https://chakra-ui.com/docs/components/flex
 	return (
 	<Flex width="100%">
 		<ButtonGroup isAttached colorScheme='blue'>
