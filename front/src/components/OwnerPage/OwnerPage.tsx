@@ -110,10 +110,10 @@ const OwnerPage = () => {
             <Box>
                 <Tabs size='lg' index={idx[workflowStatus]}>
                     <TabList>
-                        {(workflowStatus <= 0) ? <Tab>Registration</Tab> : <Tab isDisabled>Registration</Tab>}
-                        {(workflowStatus == 1) ? <Tab>Proposals</Tab> : <Tab isDisabled>Proposals</Tab>}
-                        {(workflowStatus == 3) ? <Tab>Votes</Tab> : <Tab isDisabled>Votes</Tab>}
-                        {(workflowStatus >= 5) ? <Tab>Result</Tab> : <Tab isDisabled>Result</Tab>}
+                        <Tab isDisabled={workflowStatus > 0}>Registration</Tab>
+                        <Tab isDisabled={workflowStatus !== 1}>Proposals</Tab>
+                        <Tab isDisabled={workflowStatus !== 3}>Votes</Tab>
+                        <Tab isDisabled={workflowStatus < 5}>Result</Tab>
                     </TabList>
 
                     <TabPanels>
