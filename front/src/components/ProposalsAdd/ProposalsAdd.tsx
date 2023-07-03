@@ -13,14 +13,14 @@ import { Textarea } from '@chakra-ui/react'
 
 import { useState } from 'react';
 
-import { useGlobalContext } from '@/context/global';
+import { useVoterContext } from '@/context/voter';
 import { useWorkflowContext } from '@/context/workflow';
-import { useProposalContext } from '@/context/proposals';
-import { useContract } from '@/context';
+import { useProposalContext } from '@/context/proposal';
+import { useContract } from '@/context/contract';
 
 export default function ProposalsAdd() {
 
-	const {voters,  setVoters}  = useGlobalContext();
+	const {voters,  setVoters}  = useVoterContext();
 	const {workflowStatus,  setWorkflowStatus}  = useWorkflowContext();
 	const {proposals,  setProposals}  = useProposalContext();
 

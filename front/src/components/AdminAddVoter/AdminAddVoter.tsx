@@ -5,16 +5,16 @@ import { Button, ButtonGroup } from '@chakra-ui/react';
 import { Input } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useGlobalContext } from '@/context/global';
+import { useVoterContext } from '@/context/voter';
 import { useToast } from '@chakra-ui/react';
-import { useContract } from '@/context';
+import { useContract } from '@/context/contract';
 import { Address } from 'viem';
 
 
 export default function AdminAddVoter() {
 
 	const [address, setAddress] = useState<Address>("0x" as Address);
-	const { voters, setVoters } = useGlobalContext();
+	const { voters, setVoters } = useVoterContext();
 	const toast = useToast();
 	const { addVoter, isAlreadyRegistred,getVoter } = useContract();
 

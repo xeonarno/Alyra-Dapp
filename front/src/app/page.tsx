@@ -22,7 +22,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useAccount } from 'wagmi';
 
 import WorkflowStatus from "@/enum/WorkflowStatus";
-import { useContract } from "@/context";
+import { useContract } from "@/context/contract";
 
 
 export default function Home() {

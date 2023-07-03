@@ -12,10 +12,25 @@ import {
 
 import { publicProvider } from 'wagmi/providers/public';
 
-import { GlobalContextProvider } from '@/context/global';
-import { WorkflowStatusContextProvider } from '@/context/workflow';
-import { ProposalContextProvider } from '@/context/proposals';
-import { ContractContextProvider } from '@/context/contract';
+import {
+  VoterContextProvider,
+
+} from "@/context/voter";
+
+import {
+  WorkflowStatusContextProvider,
+} from '@/context/workflow';
+import {
+
+  ProposalContextProvider,
+} from '@/context/proposal';
+import { ContractContextProvider }
+
+  from '@/context/contract';
+import {
+  OwnerContextProvider
+}
+  from '@/context/owner';
 
 const { chains, publicClient } = configureChains([hardhat], [publicProvider()]);
 const { connectors } = getDefaultWallets({
@@ -41,15 +56,17 @@ export default function RootLayout({
         <WagmiConfig config={wagmiConfig}>
           <RainbowKitProvider chains={chains}>
             <ChakraProvider>
-              <GlobalContextProvider>
-                <WorkflowStatusContextProvider>
-                  <ContractContextProvider>
-                    <ProposalContextProvider>
-                      {children}
-                    </ProposalContextProvider>
-                  </ContractContextProvider>
-                </WorkflowStatusContextProvider>
-              </GlobalContextProvider>
+              <ContractContextProvider>
+                <OwnerContextProvider>
+                  <VoterContextProvider>
+                    <WorkflowStatusContextProvider>
+                      <ProposalContextProvider>
+                        {children}
+                      </ProposalContextProvider>
+                    </WorkflowStatusContextProvider>
+                  </VoterContextProvider>
+                </OwnerContextProvider>
+              </ContractContextProvider>
             </ChakraProvider>
           </RainbowKitProvider>
         </WagmiConfig>
