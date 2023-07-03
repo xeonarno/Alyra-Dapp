@@ -8,7 +8,6 @@ import { useOwnerContext } from "@/context/owner";
 import OwnerPage from "@/components/OwnerPage/OwnerPage";
 import VoterPage from "@/components/VoterPage/VoterPage";
 
-
 export default function Home() {
   const { isConnected } = useAccount();
 
