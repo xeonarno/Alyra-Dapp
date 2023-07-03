@@ -16,14 +16,15 @@ export default function Layout({ children }: LayoutProps) {
       h = "100vh"
       justifyContent = "center"
       >
-        <Header />
-        <Flex
-          grow="1"
-          p="2rem"
-        >
+
+      <Header />
+
+        <Flex grow="1" p="2rem">
         {children}
         </Flex>
-        <Footer />
+
+      <Footer />
+
     </Flex>
   )
 }
