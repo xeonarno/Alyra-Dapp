@@ -4,6 +4,7 @@ import { ethers } from "hardhat";
 import { SignerWithAddress } from "@nomicfoundation/hardhat-ethers/signers";
 import { Voting__factory, Voting } from "../../typechain-types";
 
+
 describe('Voting', () => {
     let voting: Voting;
     let owner: SignerWithAddress;
@@ -92,24 +93,39 @@ describe('Voting', () => {
                 await voting.startProposalsRegistering();
             })
 
-            it("should get GENESIS proposal as start proposal", async () => {
+            it("should get 'GENESIS' proposal as start proposal", async () => {
                 // Arrange
                 const descriptionMock = 'descValue';
-                const genesisMock = ['GENESIS', 0n];
-                await voting.addProposal(descriptionMock);
-
+                const genesisMock = ['GENESIS', 0n, "0x0000000000000000000000000000000000000000000000000000000000000000"];
+                //await voting.addProposal(descriptionMock);
+                
                 // Act
                 const result = await voting.getOneProposal(0);
 
                 // Assert
-                expect(result).to.not.eql([descriptionMock, 0n]);
+                expect(result).to.not.eql([descriptionMock, 0n, 0n]);
+                expect(result).to.eql(genesisMock);
+            })
+
+            it("should get 'IMPERIOUS REX' proposal as 2nd proposal", async () => {
+                // Arrange
+                const descriptionMock = 'descValue';
+                const proposalName = 'IMPERIOUS REX';
+                const genesisMock = [proposalName, 0n, "0x1caf02809bb2ff23989565a114e7fabb78f984bd9e912af1772a643d23a004e6"];
+                await voting.addProposal( proposalName);
+                
+                // Act
+                const result = await voting.getOneProposal(1);
+
+                // Assert
+                expect(result).to.not.eql([descriptionMock, 0n, 0n]);
                 expect(result).to.eql(genesisMock);
             })
 
             it("should get proposal from index", async () => {
                 // Arrange
-                const descriptionMock = 'descValue';
-                const proposalMock = [descriptionMock, 0n];
+                const descriptionMock = 'descValue123';
+                const proposalMock = [descriptionMock, 0n, "0xe67f76a4165329a820295b202e9b280d639fa03c9bb1b05e849bad42c2426559"];
                 await voting.addProposal(descriptionMock);
 
                 // Act
@@ -124,7 +140,12 @@ describe('Voting', () => {
                 const descMock1 = 'descValue1';
                 const descMock2 = 'descValue2';
                 const descMock3 = 'descValue3';
-                const proposalsMock = [["GENESIS", 0n], [descMock1, 0n], [descMock2, 0n], [descMock3, 0n]];
+                const proposalsMock = [
+                    ["GENESIS", 0n, "0x0000000000000000000000000000000000000000000000000000000000000000"],
+                    [descMock1, 0n, "0xabd89b92518f6100aaebbe01c5d2318d8672b19693611531df08bcfb7ec74e8c"],
+                    [descMock2, 0n, "0x755c432f131bb7443c2ce88f98e37594964a64e5acaa4e9b49ffb9b787d7c8a5"],
+                    [descMock3, 0n, "0x9e29429d8394174196531d383dadb49f34c3dee61823ce5586ddbd5df09a8eec"]
+                ];
                 await voting.addProposal(descMock1);
                 await voting.addProposal(descMock2);
                 await voting.addProposal(descMock3);
@@ -260,7 +281,7 @@ describe('Voting', () => {
                 it("should get GENESIS proposal", async () => {
                     // Arrange
                     const descMock = "GENESIS";
-                    const voteMock = [descMock, 0n];
+                    const voteMock = [descMock, 0n, "0x0000000000000000000000000000000000000000000000000000000000000000"];
 
                     // Act
                     const result = await voting.getOneProposal(0);
@@ -273,7 +294,7 @@ describe('Voting', () => {
                     // Arrange
                     const descMock = "descriptionValue";
                     const indexMock = 1;
-                    const voteMock = [descMock, 0n];
+                    const voteMock = [descMock, 0n, "0x095470dbedc35195c3a8d7f0311b29b21b0c105ec444ab1808f7d2087a161843"];
 
                     // Act
                     await voting.addProposal(descMock);
@@ -306,11 +327,16 @@ describe('Voting', () => {
                     // Arrange
                     const descBase = "GENESIS";
                     const descMocks = ["descriptionValue1", "descriptionValue2", "descriptionValue3"];
+                    const hashMocks = [
+                        "0xc1a51f819ee852752cdfb7afa0a3d8dd0ac9242b5531609099e0734639f0b5c6",
+                        "0x5983ad2064c4b42df3dfabbb5e854535861ad37f3377a399d0170d0b8bf19372",
+                        "0x0075e79115a79aa863981cf090fdabc2af7f3b48730e066dc950926789c601e5"
+                    ];
                     const votesMock = [
-                        [descBase, 0n],
-                        [descMocks[0], 0n],
-                        [descMocks[1], 0n],
-                        [descMocks[2], 0n],
+                        [descBase, 0n, "0x0000000000000000000000000000000000000000000000000000000000000000"],
+                        [descMocks[0], 0n, hashMocks[0]],
+                        [descMocks[1], 0n, hashMocks[1]],
+                        [descMocks[2], 0n, hashMocks[2]],
                     ]
 
                     // Act
@@ -398,6 +424,8 @@ describe('Voting', () => {
 
             const descMock1 = "descValue1";
             const descMock2 = "descValue2";
+            const hashMock1 = "0xabd89b92518f6100aaebbe01c5d2318d8672b19693611531df08bcfb7ec74e8c";
+            //const hashMock2 = "descValue2";
 
             describe('⌊ Standard usage', () => {
                 beforeEach(async () => {
@@ -425,7 +453,7 @@ describe('Voting', () => {
                     const voter = await voting.getVoter(owner.address);
                     const proposal = await voting.getOneProposal(1);
                     expect(voter).to.eql([true, true, 1n]);
-                    expect(proposal).to.eql([descMock1, 1n]);
+                    expect(proposal).to.eql([descMock1, 1n, hashMock1]);
                 })
 
                 it("should emit vote event for voter with his choice", async () => {
@@ -452,7 +480,7 @@ describe('Voting', () => {
                     const proposal = await voting.getOneProposal(1);
                     expect(voterO).to.eql([true, true, 1n]);
                     expect(voter1).to.eql([true, true, 1n]);
-                    expect(proposal).to.eql([descMock1, 2n]);
+                    expect(proposal).to.eql([descMock1, 2n, hashMock1]);
                 })
             })
             describe('⌊ Failed usage', () => {
@@ -563,7 +591,7 @@ describe('Voting', () => {
                         const result = await voting.getOneProposal(0);
 
                         // Assert
-                        expect(result).to.eql(['GENESIS', 0n]);
+                        expect(result).to.eql(['GENESIS', 0n, "0x0000000000000000000000000000000000000000000000000000000000000000"]);
                     })
                 })
             });
@@ -794,6 +822,7 @@ describe('Voting', () => {
         describe('⌊ Owner', () => {
             const descMock1 = "descValue1";
             const descMock2 = "descValue2";
+            const hashMock1 = "0xabd89b92518f6100aaebbe01c5d2318d8672b19693611531df08bcfb7ec74e8c";
             beforeEach(async () => {
                 // Add Voters
                 await voting.addVoter(owner);
@@ -833,7 +862,7 @@ describe('Voting', () => {
                     const result = await voting.winningProposalID();
                     const proposal = await voting.getOneProposal(result);
                     expect(result).to.equal(1n);
-                    expect(proposal).to.eql([descMock1, 2n]);
+                    expect(proposal).to.eql([descMock1, 2n, hashMock1]);
                 })
 
                 it("should emit workflow status change when tally is done", async () => {

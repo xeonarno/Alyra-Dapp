@@ -62,6 +62,7 @@ export default function AdminAddVoter() {
 			status     : 'success',
 			duration   : 4500,
 			isClosable : true,
+			position   : 'top',
 		});
 
 	}

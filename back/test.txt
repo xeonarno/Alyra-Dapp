@@ -1,0 +1,318 @@
+
+
+  Voting
+    → Contract
+      ✔ should deploy the smart contract
+      ✔ should start at RegisteringVoters status
+    → getVoter
+      ⌊ Voter
+        ✔ should get voter from address
+        ✔ should failed to get voter from wrong address
+      ⌊ Not voter
+        ✔ should revert if user is not voter
+    → getOneProposal
+      ⌊ Voter
+        1) should get GENESIS proposal as start proposal
+        2) should get proposal from index
+        3) should get all the proposals from multiple indices
+      ⌊ Not voter
+        ✔ should revert if user is not voter
+    → addVoter
+      ⌊ Owner
+        ⌊ Standard usage
+          ✔ should add voter
+          ✔ should add multiple voters
+          ✔ should emit voter registration event
+        ⌊ Failure usage
+          ✔ should revert if the status is wrong
+          ✔ should revert if the user is already registered
+      ⌊ Not owner
+        ✔ should revert if user is not owner
+    → addProposal
+      ⌊ Voter
+        ⌊ Standard usage
+          4) should get GENESIS proposal
+          5) should registered proposal
+          ✔ should emit proposal registration event
+          6) should registered multiple proposals
+        ⌊ Failure usage
+          ✔ should revert from unregistered voter user
+          ✔ should revert from the wrong status
+          ✔ should revert from the void proposal
+      ⌊ Not voter
+        ✔ should revert if user is not voter
+    → setVote
+      ⌊ Voter
+        ⌊ Standard usage
+          7) should set vote for voter with proposal index
+          ✔ should emit vote event for voter with his choice
+          8) should set Vote to multiples voters with same proposal index
+        ⌊ Failed usage
+          ✔ should revert from the wrong status
+          ✔ should revert if the user already vote (42ms)
+          ✔ should revert if the user choices an unknown proposal
+      ⌊ Not voter
+        ✔ should revert if user is not voter
+    → startProposalsRegistering
+      ⌊ Owner
+        ⌊ Standard usage
+          ✔ should set status to startProposalsRegistering
+          ✔ should emit status change from RegisteringVoters to ProposalsRegistrationStarted
+          ♦ Special case
+            9) should add first proposal GENESIS when status changed to startProposalsRegistering
+        ⌊ Failure usage
+          ✔ should revert if the status is incorrect
+      ⌊ Not owner
+        ✔ should revert if user is not owner
+    → endProposalsRegistering
+      ⌊ Owner
+        ⌊ Standard usage
+          ✔ should set status to endProposalsRegistering
+          ✔ should emit status change from ProposalsRegistrationStarted to ProposalsRegistrationEnded
+        ⌊ Failure usage
+          ✔ should revert if the status is incorrect
+      ⌊ Not owner
+        ✔ should revert if user is not owner
+    → startVotingSession
+      ⌊ Owner
+        ⌊ Standard usage
+          ✔ should set status to VotingSessionStarted
+          ✔ should emit status change from ProposalsRegistrationEnded to VotingSessionStarted
+        ⌊ Failure usage
+          ✔ should revert if the status is incorrect
+      ⌊ Not owner
+        ✔ should revert if user is not owner
+    → endVotingSession
+      ⌊ Owner
+        ⌊ Standard usage
+          ✔ should set status to VotingSessionEnded
+          ✔ should emit status change from VotingSessionStarted to VotingSessionEnded
+        ⌊ Failure usage
+          ✔ should revert if the status is incorrect
+      ⌊ Not owner
+        ✔ should revert if user is not owner
+    → tallyVotes
+      ⌊ Owner
+        ⌊ Standard usage
+          10) should set the winning index from proposals votes
+          ✔ should emit workflow status change when tally is done
+        ⌊ Failure usage
+          ✔ should get the first index of proposal if 2 proposals are equal
+          ✔ should revert if the status is wrong
+      ⌊ Not owner
+        ✔ should revert if user is not owner
+
+
+  42 passing (3s)
+  10 failing
+
+  1) Voting
+       → getOneProposal
+         ⌊ Voter
+           should get GENESIS proposal as start proposal:
+     Error: VM Exception while processing transaction: reverted with reason string 'Taille min. d'une proposition'
+    at Voting.addProposal (contracts/Voting.sol:132)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async HardhatNode._mineBlockWithPendingTxs (node_modules/hardhat/src/internal/hardhat-network/provider/node.ts:1840:23)
+    at async HardhatNode.mineBlock (node_modules/hardhat/src/internal/hardhat-network/provider/node.ts:517:16)
+    at async EthModule._sendTransactionAndReturnHash (node_modules/hardhat/src/internal/hardhat-network/provider/modules/eth.ts:1532:18)
+    at async HardhatNetworkProvider.request (node_modules/hardhat/src/internal/hardhat-network/provider/provider.ts:123:18)
+    at async HardhatEthersSigner.sendTransaction (node_modules/@nomicfoundation/hardhat-ethers/src/signers.ts:125:18)
+    at async send (node_modules/ethers/src.ts/contract/contract.ts:291:20)
+  
+
+  2) Voting
+       → getOneProposal
+         ⌊ Voter
+           should get proposal from index:
+     Error: VM Exception while processing transaction: reverted with reason string 'Taille min. d'une proposition'
+    at Voting.addProposal (contracts/Voting.sol:132)
+    at processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async HardhatNode._mineBlockWithPendingTxs (node_modules/hardhat/src/internal/hardhat-network/provider/node.ts:1840:23)
+    at async HardhatNode.mineBlock (node_modules/hardhat/src/internal/hardhat-network/provider/node.ts:517:16)
+    at async EthModule._sendTransactionAndReturnHash (node_modules/hardhat/src/internal/hardhat-network/provider/modules/eth.ts:1532:18)
+    at async HardhatNetworkProvider.request (node_modules/hardhat/src/internal/hardhat-network/provider/provider.ts:123:18)
+    at async HardhatEthersSigner.sendTransaction (node_modules/@nomicfoundation/hardhat-ethers/src/signers.ts:125:18)
+    at async send (node_modules/ethers/src.ts/contract/contract.ts:291:20)
+  
+
+  3) Voting
+       → getOneProposal
+         ⌊ Voter
+           should get all the proposals from multiple indices:
+
+      AssertionError: expected [ [ 'GENESIS', 0n, …(1) ], …(3) ] to deeply equal [ [ 'GENESIS', 0n ], …(3) ]
+      + expected - actual
+
+       [
+         [
+           "GENESIS"
+           "0"
+      -    "0x0000000000000000000000000000000000000000000000000000000000000000"
+         ]
+         [
+           "descValue1"
+           "0"
+      -    "0xabd89b92518f6100aaebbe01c5d2318d8672b19693611531df08bcfb7ec74e8c"
+         ]
+         [
+           "descValue2"
+           "0"
+      -    "0x755c432f131bb7443c2ce88f98e37594964a64e5acaa4e9b49ffb9b787d7c8a5"
+         ]
+         [
+           "descValue3"
+           "0"
+      -    "0x9e29429d8394174196531d383dadb49f34c3dee61823ce5586ddbd5df09a8eec"
+         ]
+       ]
+      
+      at Context.<anonymous> (test/unit/Voting.ts:139:65)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+  4) Voting
+       → addProposal
+         ⌊ Voter
+           ⌊ Standard usage
+             should get GENESIS proposal:
+
+      AssertionError: expected [ 'GENESIS', 0n, …(1) ] to deeply equal [ 'GENESIS', 0n ]
+      + expected - actual
+
+       [
+         "GENESIS"
+         "0"
+      -  "0x0000000000000000000000000000000000000000000000000000000000000000"
+       ]
+      
+      at Context.<anonymous> (test/unit/Voting.ts:269:39)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+  5) Voting
+       → addProposal
+         ⌊ Voter
+           ⌊ Standard usage
+             should registered proposal:
+
+      AssertionError: expected [ 'descriptionValue', 0n, …(1) ] to deeply equal [ 'descriptionValue', 0n ]
+      + expected - actual
+
+       [
+         "descriptionValue"
+         "0"
+      -  "0x095470dbedc35195c3a8d7f0311b29b21b0c105ec444ab1808f7d2087a161843"
+       ]
+      
+      at Context.<anonymous> (test/unit/Voting.ts:283:39)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+  6) Voting
+       → addProposal
+         ⌊ Voter
+           ⌊ Standard usage
+             should registered multiple proposals:
+
+      AssertionError: expected [ [ 'GENESIS', 0n, …(1) ], …(3) ] to deeply equal [ [ 'GENESIS', 0n ], …(3) ]
+      + expected - actual
+
+       [
+         [
+           "GENESIS"
+           "0"
+      -    "0x0000000000000000000000000000000000000000000000000000000000000000"
+         ]
+         [
+           "descriptionValue1"
+           "0"
+      -    "0xc1a51f819ee852752cdfb7afa0a3d8dd0ac9242b5531609099e0734639f0b5c6"
+         ]
+         [
+           "descriptionValue2"
+           "0"
+      -    "0x5983ad2064c4b42df3dfabbb5e854535861ad37f3377a399d0170d0b8bf19372"
+         ]
+         [
+           "descriptionValue3"
+           "0"
+      -    "0x0075e79115a79aa863981cf090fdabc2af7f3b48730e066dc950926789c601e5"
+         ]
+       ]
+      
+      at Context.<anonymous> (test/unit/Voting.ts:327:69)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+  7) Voting
+       → setVote
+         ⌊ Voter
+           ⌊ Standard usage
+             should set vote for voter with proposal index:
+
+      AssertionError: expected [ 'descValue1', 1n, …(1) ] to deeply equal [ 'descValue1', 1n ]
+      + expected - actual
+
+       [
+         "descValue1"
+         "1"
+      -  "0xabd89b92518f6100aaebbe01c5d2318d8672b19693611531df08bcfb7ec74e8c"
+       ]
+      
+      at Context.<anonymous> (test/unit/Voting.ts:428:41)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+  8) Voting
+       → setVote
+         ⌊ Voter
+           ⌊ Standard usage
+             should set Vote to multiples voters with same proposal index:
+
+      AssertionError: expected [ 'descValue1', 2n, …(1) ] to deeply equal [ 'descValue1', 2n ]
+      + expected - actual
+
+       [
+         "descValue1"
+         "2"
+      -  "0xabd89b92518f6100aaebbe01c5d2318d8672b19693611531df08bcfb7ec74e8c"
+       ]
+      
+      at Context.<anonymous> (test/unit/Voting.ts:455:41)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+  9) Voting
+       → startProposalsRegistering
+         ⌊ Owner
+           ⌊ Standard usage
+             ♦ Special case
+               should add first proposal GENESIS when status changed to startProposalsRegistering:
+
+      AssertionError: expected [ 'GENESIS', 0n, …(1) ] to deeply equal [ 'GENESIS', 0n ]
+      + expected - actual
+
+       [
+         "GENESIS"
+         "0"
+      -  "0x0000000000000000000000000000000000000000000000000000000000000000"
+       ]
+      
+      at Context.<anonymous> (test/unit/Voting.ts:566:43)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+  10) Voting
+       → tallyVotes
+         ⌊ Owner
+           ⌊ Standard usage
+             should set the winning index from proposals votes:
+
+      AssertionError: expected [ 'descValue1', 2n, …(1) ] to deeply equal [ 'descValue1', 2n ]
+      + expected - actual
+
+       [
+         "descValue1"
+         "2"
+      -  "0xabd89b92518f6100aaebbe01c5d2318d8672b19693611531df08bcfb7ec74e8c"
+       ]
+      
+      at Context.<anonymous> (test/unit/Voting.ts:836:41)
+      at processTicksAndRejections (node:internal/process/task_queues:95:5)
+
+
+
