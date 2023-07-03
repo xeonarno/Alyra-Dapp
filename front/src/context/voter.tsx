@@ -1,5 +1,5 @@
 "use client";
-import Voters from "@/enum/Voter";
+import Voters from "@/type/Voter";
 import React, { createContext, useContext, useState } from "react";
 
 

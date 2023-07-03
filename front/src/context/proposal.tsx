@@ -1,5 +1,5 @@
 "use client";
-import Proposals from "@/enum/Proposal";
+import Proposals from "@/type/Proposal";
 import React, { createContext, useContext, useState } from "react";
 
 type ProposalContextType = {

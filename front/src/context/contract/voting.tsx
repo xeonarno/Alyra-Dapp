@@ -1,11 +1,17 @@
-import { Hash, PrepareWriteContractConfig, ReadContractConfig, prepareWriteContract, readContract, writeContract } from '@wagmi/core';
+import { Hash, PrepareWriteContractConfig,
+    ReadContractConfig, prepareWriteContract,
+    readContract, writeContract, WatchContractEventConfig,
+    WatchContractEventCallback,
+    watchContractEvent
+} from '@wagmi/core';
 import { Address } from 'viem';
 import Voting from "@/../public/Voting.json";
-import Voters from '@/enum/Voter';
-import Proposals from '@/enum/Proposal';
+import Voters from '@/type/Voter';
+import Proposals from '@/type/Proposal';
 import WorkflowStatus from '@/enum/WorkflowStatus';
+import VoterEvent from '@/type/VoterEvent';
 
-const CONTRACT_ADDRESS = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 const CONTRACT_ABI = Voting.abi;
 const base = {
     address: CONTRACT_ADDRESS,
@@ -36,9 +42,23 @@ const Contract = {
         console.log(`[${params.functionName}]`, {hash});
 
         return hash as Hash;
+    },
+    listen<T>(params: Partial<WatchContractEventConfig>, listener : (args:T) => void ) {
+        const options = {
+            ...base,
+            ...params
+        } as WatchContractEventConfig;
+        const callback  = (log: Parameters<WatchContractEventCallback>[0]) =>{
+            console.log(`[${params.eventName}]: `, log);
+            const [data] = log;
+
+            listener(data as T);
+        }
+        console.log(`[${params.eventName}][on]`, {options});
+        const unSubscribe = watchContractEvent(options, callback)
+        return unSubscribe;
     }
 }
-
 
 // Function 
 
@@ -177,6 +197,25 @@ export const tallyVotes = async () => {
 }
 
 // event VoterRegistered(address voterAddress); 
+export const listenVoterRegistered = (listener : (event: VoterEvent) => void)=> {
+    const unwatch = Contract.listen({eventName:'VoterRegistered'}, listener);
+    return unwatch;
+}
+
 // event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
+export const listenStatusChanged = (listener : (event: Object) => void)=> {
+    const unwatch = Contract.listen({eventName:'WorkflowStatusChange'}, listener);
+    return unwatch;
+}
+
 // event ProposalRegistered(uint proposalId);
+export const listenProposalRegistered = (listener : (event: Object) => void)=> {
+    const unwatch = Contract.listen({eventName:'ProposalRegistered'}, listener);
+    return unwatch;
+}
+
 // event Voted (address voter, uint proposalId);
+export const listenVoted = (listener : (event: Object) => void)=> {
+    const unwatch = Contract.listen({eventName:'Voted'}, listener);
+    return unwatch;
+}

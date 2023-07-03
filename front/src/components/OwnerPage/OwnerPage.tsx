@@ -24,28 +24,8 @@ import { useAccount } from 'wagmi';
 const OwnerPage = () => {
 
     const toast = useToast();
-    const { workflowStatus, setWorkflowStatus } = useWorkflowContext();
+    const { workflowStatus, updateWorkflowStatus } = useWorkflowContext();
     ///////////////////////////////////////////////
-
-    const { getStatus } = useContract();
-    const { isConnected } = useAccount();
-
-    const getWorkflow = async () => {
-        // Activate mode admin
-    };
-
-    useEffect(() => {
-        const reachStatus = async () => {
-            const status = await getStatus();
-            setWorkflowStatus(status);
-        }
-        reachStatus();
-
-        if (isConnected) {
-            getWorkflow();
-        }
-    }, [isConnected])
-
     const disp: string[] = [
         "RegisteringVoters",
         "ProposalsRegistrationStarted",
@@ -83,7 +63,7 @@ const OwnerPage = () => {
 
     const getApiNextStep = () => {
 
-        setWorkflowStatus(workflowStatus + 1);
+        updateWorkflowStatus(workflowStatus + 1);
         //console.log(workflowStatus);
 
         toast({

@@ -1,22 +1,59 @@
 "use client";
-import { IconButton } from '@chakra-ui/react';
+import { Button, ButtonGroup, Input, Flex, useToast, IconButton } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import { Button, ButtonGroup } from '@chakra-ui/react';
-import { Input } from '@chakra-ui/react';
-import { Flex } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useVoterContext } from '@/context/voter';
-import { useToast } from '@chakra-ui/react';
 import { useContract } from '@/context/contract';
-import { Address } from 'viem';
-
+import { Address, ContractFunctionExecutionError } from 'viem';
+import Voter from '@/type/Voter';
+import VoterEvent from '@/type/VoterEvent';
 
 export default function AdminAddVoter() {
 
 	const [address, setAddress] = useState<Address>("0x" as Address);
 	const { voters, setVoters } = useVoterContext();
 	const toast = useToast();
-	const { addVoter, isAlreadyRegistred,getVoter } = useContract();
+	const { addVoter, listenVoterRegistered } = useContract();
+
+	const onVoterRegistered = (event: VoterEvent) => {
+		console.log('Voter ::: ', event);
+
+		const { args: { voterAddress } } = event;
+		console.log({ voterAddress });
+		registeredVoter(voterAddress);
+	}
+
+	const registeredVoter = (address: Address) => {
+		const voter: Voter = {
+			address,
+			votedProposalId: 0,
+			hasVoted: false,
+			dirty: true,
+		}
+
+		// Addresses are uniques
+		const found = voters.some(
+			({ address: addr }) => addr.toLowerCase() === address.toLowerCase()
+		);
+		if (!found) {
+
+			setVoters([...voters, voter]);
+
+			toast({
+				title: 'Success !',
+				description: "Voter is registered !",
+				status: 'success',
+				duration: 4500,
+				isClosable: true,
+				position: 'top',
+			});
+
+		}
+	}
+	useEffect(() => {
+		const unSubscribe = listenVoterRegistered(onVoterRegistered);
+		return () => unSubscribe();
+	}, [])
 
 	const ErrorToast = (msg: string) => {
 		toast({
@@ -28,10 +65,12 @@ export default function AdminAddVoter() {
 		});
 	}
 
-	const addVoterAddress = () => {
+	const addVoterAddress = async () => {
 
-		if (address.length !== 42) { ErrorToast("Incorrect Eth Address !"); return; }
-		if (address.startsWith("0x")) { ErrorToast("Incorrect Eth Address !"); return; }
+		if (address.length !== 42 || !address.startsWith("0x")) {
+			ErrorToast("Incorrect Eth Address !");
+			return;
+		}
 
 		// Addresses are uniques
 		const found = voters.some(
@@ -39,33 +78,30 @@ export default function AdminAddVoter() {
 		);
 		if (found) {
 			ErrorToast("Address already registered !");
-		}else {
+		} else {
 			toast({ description: 'Transaction in progress...' });
-			getApiAddVoter();
+			await getApiAddVoter();
 		};
 	};
 
 	const getApiAddVoter = async () => {
-		
-		const registered = isAlreadyRegistred(address);
-		if(!registered) {
-			await addVoter(address);
+		try {
+			try {
+				await addVoter(address);
+			} catch (error) {
+				const { details = "" } = error as ContractFunctionExecutionError;
+				if (details.includes('Already registered')) {
+					registeredVoter(address);
+				} else {
+					throw error;
+				}
+			}
+		} catch (error: any) {
+			console.error(error);
+			ErrorToast((error as Error).message);
 		}
-		const voter = await getVoter(address);
-
-		setVoters([...voters, voter]);
-
-		toast({
-			title: 'Success !',
-			description: "Voter is registered !",
-			status     : 'success',
-			duration   : 4500,
-			isClosable : true,
-			position   : 'top',
-		});
-
 	}
-	
+
 	// https://chakra-ui.com/docs/components/button
 	// https://chakra-ui.com/docs/components/icon
 	// https://chakra-ui.com/docs/components/input
