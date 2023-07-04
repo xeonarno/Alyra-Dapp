@@ -17,6 +17,7 @@ export default function AdminAddVoter() {
 
 	const onVoterRegistered = (event: VoterEvent) => {
 		console.log('Voter ::: ', event);
+		console.log('[[VOTERS]]', voters);
 
 		const { args: { voterAddress } } = event;
 		console.log({ voterAddress });
@@ -37,6 +38,11 @@ export default function AdminAddVoter() {
 		);
 		if (!found) {
 
+			console.log('[[VOTERS]]');
+			console.log(voters);
+			console.log(voter);
+			console.log('[[VOTERS]]');
+
 			setVoters([...voters, voter]);
 
 			toast({
@@ -51,6 +57,7 @@ export default function AdminAddVoter() {
 		}
 	}
 	useEffect(() => {
+		console.log('[[USEEFFECT MOTHER FUCKER !!!! ]]');
 		const unSubscribe = listenVoterRegistered(onVoterRegistered);
 		return () => unSubscribe();
 	}, [])

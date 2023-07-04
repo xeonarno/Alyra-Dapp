@@ -21,12 +21,6 @@ const WorkflowStatusContext = createContext<WorkflowStatusContextType>({
 });
 
 
- // Create client for Viem
- const client = createPublicClient({
-	chain: hardhat,
-	transport: http(),
-})
-
 export const WorkflowStatusContextProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
 
 	const [workflowStatus, setWorkflowStatus] = useState<WorkflowStatus>(WorkflowStatus.RegisteringVoters);
@@ -50,9 +44,7 @@ export const WorkflowStatusContextProvider: React.FC<React.PropsWithChildren<any
 	}
 
 	useEffect(() => {
-		console.log('UPDATE INITIAL STATUS !');
 		const watcher = listenStatusChanged(onStatusChanged);
-
         const reachStatus = async () => {
             const status = await getStatus();
 			// try{

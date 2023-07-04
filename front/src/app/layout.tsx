@@ -14,19 +14,17 @@ import { publicProvider } from 'wagmi/providers/public';
 
 import {
   VoterContextProvider,
-
 } from "@/context/voter";
 
 import {
   WorkflowStatusContextProvider,
 } from '@/context/workflow';
-import {
 
+import {
   ProposalContextProvider,
 } from '@/context/proposal';
-import { ContractContextProvider }
 
-  from '@/context/contract';
+import { ContractContextProvider } from '@/context/contract';
 import {
   OwnerContextProvider
 }
@@ -53,23 +51,25 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <WagmiConfig config={wagmiConfig}>
-          <RainbowKitProvider chains={chains}>
-            <ChakraProvider>
-              <ContractContextProvider>
-                <OwnerContextProvider>
-                  <VoterContextProvider>
-                    <WorkflowStatusContextProvider>
-                      <ProposalContextProvider>
+
+        <ContractContextProvider>
+          <OwnerContextProvider>
+            <VoterContextProvider>
+              <WorkflowStatusContextProvider>
+                <ProposalContextProvider>
+                  <WagmiConfig config={wagmiConfig}>
+                    <RainbowKitProvider chains={chains}>
+                      <ChakraProvider>
                         {children}
-                      </ProposalContextProvider>
-                    </WorkflowStatusContextProvider>
-                  </VoterContextProvider>
-                </OwnerContextProvider>
-              </ContractContextProvider>
-            </ChakraProvider>
-          </RainbowKitProvider>
-        </WagmiConfig>
+                      </ChakraProvider>
+                    </RainbowKitProvider>
+                  </WagmiConfig>
+                </ProposalContextProvider>
+              </WorkflowStatusContextProvider>
+            </VoterContextProvider>
+          </OwnerContextProvider>
+        </ContractContextProvider>
+
       </body>
     </html>
   )
