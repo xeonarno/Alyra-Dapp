@@ -52,7 +52,7 @@ export default function Footer() {
         placement='right'
         onClose={onClose}
         finalFocusRef={btnRef}
-        size="sm"
+        size="xs"
       >
         <DrawerOverlay />
         <DrawerContent>
@@ -61,7 +61,7 @@ export default function Footer() {
 
           <DrawerBody>
             <OrderedList>
-              {addrHardHat.map( (a, i)=> <ListItem onClick={e => copyText(addrHardHat[i])} key='{a}'><code>{a.slice(0,8)}...{a.slice(-6)}</code></ListItem>)}
+              {addrHardHat.map( (a, i)=> <ListItem onClick={e => copyText(addrHardHat[i])} key={a}><code>{a.slice(0,8)}...{a.slice(-6)}</code></ListItem>)}
             </OrderedList>
           </DrawerBody>
 

@@ -1,5 +1,6 @@
 "use client"
 import Layout from "@/components/Layout/Layout";
+import { AbsoluteCenter, Box } from "@chakra-ui/react";
 
 import { useAccount } from 'wagmi';
 
@@ -15,7 +16,13 @@ export default function Home() {
 
   return (
     <Layout>
-      {!isConnected && <ConnectButton />}
+      {!isConnected &&
+        <Box position='relative' h='100%' w="100%">
+          <AbsoluteCenter color='white' axis='both'>
+            <ConnectButton />
+          </AbsoluteCenter>
+        </Box>
+      }
       {isConnected && isOwner && <OwnerPage />}
       {isConnected && !isOwner && <VoterPage />}
     </Layout>
