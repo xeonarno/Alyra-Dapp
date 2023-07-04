@@ -8,13 +8,13 @@ import { useToast } from '@chakra-ui/react';
 
 import { useState } from 'react';
 
-import { useGlobalContext } from '@/context/global';
+import { useVoterContext, } from '@/context/voter';
 import { useWorkflowContext } from '@/context/workflow';
-import { useProposalContext } from '@/context/proposals';
+import { useProposalContext} from '@/context/proposal';
 
 export default function VotesTab() {
 
-	const {voters,  setVoters}  = useGlobalContext();
+	const {voters,  setVoters}  = useVoterContext();
   const {workflowStatus,  setWorkflowStatus}  = useWorkflowContext();
 	const [voterIndex, setVoterIndex] = useState("");
 	const [proposalIndex, setProposalIndex] = useState("");

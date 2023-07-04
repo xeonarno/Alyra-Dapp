@@ -11,7 +11,7 @@ import { Heading } from '@chakra-ui/react';
 import { Stack, StackDivider } from '@chakra-ui/react';
 
 //-import { useGlobalContext } from '@/context/global';
-import { useProposalContext } from '@/context/proposals';
+import { useProposalContext } from '@/context/proposal';
 
 export default function ProposalsList() {
 
