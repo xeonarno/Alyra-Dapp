@@ -10,6 +10,9 @@ import Voters from '@/type/Voter';
 import Proposals from '@/type/Proposal';
 import WorkflowStatus from '@/enum/WorkflowStatus';
 import VoterEvent from '@/type/VoterEvent';
+import StatusEvent from '@/type/StatusEvent';
+import ProposalEvent from '@/type/ProposalEvent';
+import VoteEvent from '@/type/VoteEvent';
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 const CONTRACT_ABI = Voting.abi;
@@ -24,9 +27,9 @@ const Contract = {
             ...base,
             ...params,
         } as ReadContractConfig;
-        console.log(`[${params.functionName}]`, {params});
+        console.log(`-[${params.functionName}]`, {params});
         const result = await readContract(options);
-        console.log(`[${params.functionName}]`, {result});
+        console.log(`-[${params.functionName}]`, {result});
         return result as T;
     },
 
@@ -35,11 +38,11 @@ const Contract = {
             ...base,
             ...params
         } as PrepareWriteContractConfig
-        console.log(`[${params.functionName}]`, {params});
+        console.log(`-[${params.functionName}]`, {params});
         const config = await prepareWriteContract(options);
 
         const { hash } = await writeContract(config);
-        console.log(`[${params.functionName}]`, {hash});
+        console.log(`-[${params.functionName}]`, {hash});
 
         return hash as Hash;
     },
@@ -49,12 +52,12 @@ const Contract = {
             ...params
         } as WatchContractEventConfig;
         const callback  = (log: Parameters<WatchContractEventCallback>[0]) =>{
-            console.log(`[${params.eventName}]: `, log);
+            console.log(`-[${params.eventName}]: `, log);
             const [data] = log;
 
             listener(data as T);
         }
-        console.log(`[${params.eventName}][on]`, {options});
+        console.log(`-[${params.eventName}][ON]`, {options});
         const unSubscribe = watchContractEvent(options, callback)
         return unSubscribe;
     }
@@ -203,19 +206,19 @@ export const listenVoterRegistered = (listener : (event: VoterEvent) => void)=> 
 }
 
 // event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
-export const listenStatusChanged = (listener : (event: Object) => void)=> {
+export const listenStatusChanged = (listener : (event: StatusEvent) => void)=> {
     const unwatch = Contract.listen({eventName:'WorkflowStatusChange'}, listener);
     return unwatch;
 }
 
 // event ProposalRegistered(uint proposalId);
-export const listenProposalRegistered = (listener : (event: Object) => void)=> {
+export const listenProposalRegistered = (listener : (event: ProposalEvent) => void)=> {
     const unwatch = Contract.listen({eventName:'ProposalRegistered'}, listener);
     return unwatch;
 }
 
 // event Voted (address voter, uint proposalId);
-export const listenVoted = (listener : (event: Object) => void)=> {
+export const listenVoted = (listener : (event: VoteEvent) => void)=> {
     const unwatch = Contract.listen({eventName:'Voted'}, listener);
     return unwatch;
 }

@@ -1,12 +1,15 @@
 "use client";
 import React, { createContext, useContext } from "react";
-import { Address, useAccount, useContractEvent } from "wagmi";
+import { Address } from "wagmi";
 import * as voting from "./contract/voting";
 import { Hash } from "viem";
 import Proposals from "@/type/Proposal";
 import Voters from "@/type/Voter";
 import WorkflowStatus from "@/enum/WorkflowStatus";
 import VoterEvent from "@/type/VoterEvent";
+import StatusEvent from "@/type/StatusEvent";
+import ProposalEvent from "@/type/ProposalEvent";
+import VoteEvent from "@/type/VoteEvent";
 
 type ContractContextType = {
     // getOwner: typeof voting.getOwner;
@@ -24,9 +27,9 @@ type ContractContextType = {
     endVotingSession(): Promise<Hash>,
     tallyVotes(): Promise<Hash>
     listenVoterRegistered(listener: (arg: VoterEvent) => void): () => void,
-    listenStatusChanged(listener: (arg: Object) => void): () => void,
-    listenProposalRegistered(listener: (arg: Object) => void): () => void,
-    listenVoted(listener: (arg: Object) => void): () => void
+    listenStatusChanged(listener: (arg: StatusEvent) => void): () => void,
+    listenProposalRegistered(listener: (arg: ProposalEvent) => void): () => void,
+    listenVoted(listener: (arg: VoteEvent) => void): () => void
 } & {
     isAlreadyRegistred(address: Address): Promise<boolean>
 }
@@ -34,6 +37,8 @@ type ContractContextType = {
 const ContractContext = createContext<ContractContextType>(voting as ContractContextType);
 
 export const ContractContextProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
+    console.log('[[ContractContextProvider]]: INIT !');
+
     const isAlreadyRegistred = async (address: Address): Promise<boolean> => {
         try {
             console.log(`Ask for address : ${address}`);

@@ -1,101 +1,98 @@
 "use client"
 
-import { Flex } from '@chakra-ui/react';
-import { Button, ButtonGroup } from '@chakra-ui/react';
-import { IconButton } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
+import { Button, Card, CardBody, CardHeader, Center, Divider, Heading, Spinner, Text } from '@chakra-ui/react';
+import { AddIcon, CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
 import { useToast } from '@chakra-ui/react';
 
-import { Container } from '@chakra-ui/react';
-import { Divider } from '@chakra-ui/react';
-import { Select } from '@chakra-ui/react'
-import { Textarea } from '@chakra-ui/react'
+import { Textarea } from '@chakra-ui/react';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { useVoterContext } from '@/context/voter';
-import { useWorkflowContext } from '@/context/workflow';
 import { useProposalContext } from '@/context/proposal';
-import { useContract } from '@/context/contract';
+import { useAccount } from 'wagmi';
+import { useVoterContext } from '@/context/voter';
+import AdminValidation from '../AdminValidation/AdminValidation';
+import { useWorkflowContext } from '@/context/workflow';
+import { useOwnerContext } from '@/context/owner';
 
 export default function ProposalsAdd() {
 
-	const {voters,  setVoters}  = useVoterContext();
-	const {workflowStatus,  setWorkflowStatus}  = useWorkflowContext();
-	const {proposals,  setProposals}  = useProposalContext();
-
-	const [voterIndex, setVoterIndex] = useState("");
 	const [proposalText, setProposalText] = useState("");
 
-	const { addProposal } = useContract();
-
+	const { address } = useAccount();
+	const { isVoter, checkVoterStatus } = useVoterContext();
 	const toast = useToast();
+	const { addNewProposal, proposals } = useProposalContext();
+	const { nextStep, isLoading } = useWorkflowContext();
+	const { isOwner } = useOwnerContext();
 
-	const addNewProposal = () => {
-		if( voterIndex.length <= 0) {
-			toast({
-				title      : 'NO',
-				description: "Select a voter, before propose !",
-				status     : 'error',
-				duration   : 4500,
-				isClosable : true,
-			});
-			return;
-		}
-		toast({ description: 'Transaction in progress...' });
-		
-		getApiAddProposal();
-	};
+	const [activate, setActivate] = useState(false);
 
-	const getApiAddProposal = async () => {
+	const onTextChanged = (event: any) => {
+		const proposal = event.target.value as string;
 
-		await addProposal(proposalText);
-
-
-
-		setProposals( [...proposals, {
-			description: proposalText,
-			voteCount  : 0
-		}]);
-
-		toast({
-			title      : 'Success !',
-			description: "Proposal is registered !",
-			status     : 'success',
-			duration   : 4500,
-			isClosable : true,
-		});
+		setProposalText(proposal);
+		setActivate(proposal.length >= 10);
 	}
-/*
-0x99048293FA822B1C610979122BB987F072a62CcA
-0x1e3F30A3715D00A91de8dd819ceB75c444CDFD6D
-0xE82a021e583e2826488611b01CFe870ee051b9ac
-*/
-  return (
 
-    <Container width='100%'>
-		<Select width='100%' placeholder='Select a Voter'
-			isDisabled={(workflowStatus == 1)? false: true}
-			onChange={e => setVoterIndex(e.target.value)}
-		>
-		({
-			voters.filter(({hasVoted}) => hasVoted).map((voter,i)=>
-				<option key={i} value={i} >⟠ {voter.address}</option>
-			)
-		})
-		</Select>
-		<Divider orientation='horizontal' height='10px' />
+	useEffect(() => {
+		toast({
+			title: 'Success',
+			description: 'New Proposal available',
+			status: 'success',
+			duration: 4500,
+			isClosable: true,
+		});
+	}, [proposals]);
 
-		<ButtonGroup width='100%' isAttached colorScheme='blue' isDisabled={(workflowStatus == 1)? false: true}>
-			<IconButton onClick={ ()=> addNewProposal()} aria-label='Add New Proposal' icon={<AddIcon />} />
-			<Button onClick={ ()=> addNewProposal()}>Add New Proposal</Button>
-		</ButtonGroup>
-		<Textarea placeholder=''
-			isDisabled={(workflowStatus == 1)? false: true}
-			onChange={e => setProposalText(e.target.value)}
+	useEffect(() => {
+		if (!isVoter) {
+			onVoterStatus();
+		}
+	}, [isVoter])
+
+	const onVoterStatus = () => {
+		checkVoterStatus();
+	}
+
+	const handleValidation = () => {
+		console.log("[[VoterPage]]: validation !");
+		nextStep();
+	}
+
+	return <>{isLoading ? <Center w="100vw">
+		<Spinner
+			thickness='4px'
+			speed='0.65s'
+			emptyColor='gray.200'
+			color='blue.500'
+			size='xl'
 		/>
+	</Center> :
+		<Card width="100%">
+			<CardHeader>
+				<Heading size='md'>Add new proposal</Heading>
+				<Text pt='2' fontSize='sm'>⟠ {address}  {isVoter ? <CheckCircleIcon /> : <WarningIcon onClick={onVoterStatus} />}</Text>
+				{isOwner && <AdminValidation question="Close Proposals registration ?" onNext={() => handleValidation()} />}
+			</CardHeader>
+			<CardBody>
+				<Textarea placeholder=''
+					onChange={onTextChanged}
+				/>
+				<Divider orientation='vertical' height='10px' />
+				<Button
+					leftIcon={<AddIcon />}
+					onClick={() => addNewProposal(proposalText)}
+					colorScheme='blue'
+					variant='solid'
+					aria-label='Add new proposal'
+					isDisabled={!activate}
+				>
+					Add new proposal
+				</Button>
 
-    </Container>
-  )
-
+			</CardBody>
+		</Card>
+	}
+	</>
 }

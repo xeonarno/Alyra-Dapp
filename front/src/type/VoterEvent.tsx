@@ -1,14 +1,6 @@
-import { Hash } from "@wagmi/core";
 import { Address } from "viem";
+import ContractEvent from "./ContractEvent";
 
-type VoterEvent = {
-    address: Address,
-    args: {
-        voterAddress: Address,
-    }
-    eventName: string,
-    blockHash: Hash,
-    blockNumber: bigint,
-}
+type VoterEvent = ContractEvent<{voterAddress: Address}>
 
 export default VoterEvent;

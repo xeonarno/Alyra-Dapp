@@ -14,25 +14,20 @@ export default function AdminCardVoters() {
 	return (
 		<Flex>
 			<Card width="100%">
-			<CardHeader>
-				<Heading size='md'>Registered voters</Heading>
-			</CardHeader>
-
-			<CardBody>
-				<Stack divider={<StackDivider />} spacing='4'>
-				({
-				voters.map((voter,i)=> <AdminCardVoter key={i} num={i+1} address={voter.address} />)
-				})
-				</Stack>
-			</CardBody>
+				<CardHeader>
+					<Heading size='md'>Registered voters</Heading>
+				</CardHeader>
+				<CardBody>
+					<Stack divider={<StackDivider />} spacing='4'>
+						({
+							voters.map(({ address }, i,{ length } ) => {
+								return <AdminCardVoter key={i} num={i + 1} address={address} last={length===i+1} />
+							})
+						})
+					</Stack>
+				</CardBody>
 			</Card>
 
 		</Flex>
 	);
 }
-
-/*
-0x99048293FA822B1C610979122BB987F072a62CcA
-0x1e3F30A3715D00A91de8dd819ceB75c444CDFD6D
-0xE82a021e583e2826488611b01CFe870ee051b9ac
-*/

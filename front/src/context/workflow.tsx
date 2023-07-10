@@ -3,75 +3,85 @@ import WorkflowStatus from "@/enum/WorkflowStatus";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useContract } from "./contract";
 
-// VIEM (pour les events)
-import { Address, GetLogsParameters, createPublicClient, http, parseAbiItem } from 'viem'
-import { hardhat } from 'viem/chains'
-import { useContractEvent } from "wagmi";
+import {
+	endProposalsRegistering,
+	endVotingSession,
+	startProposalsRegistering,
+	startVotingSession,
+	tallyVotes
+} from "./contract/voting";
 
-import Voting from "@/../public/Voting.json";
+import StatusEvent from "@/type/StatusEvent";
+
 
 type WorkflowStatusContextType = {
-	workflowStatus:WorkflowStatus,
-	updateWorkflowStatus(status: WorkflowStatus): void,
+	workflowStatus: WorkflowStatus,
+	nextStep(): void,
+	isLoading: boolean,
 }
 
 const WorkflowStatusContext = createContext<WorkflowStatusContextType>({
-	workflowStatus:WorkflowStatus.RegisteringVoters,
-	updateWorkflowStatus:()=>{},
+	workflowStatus: WorkflowStatus.RegisteringVoters,
+	nextStep: () => { },
+	isLoading: false,
 });
 
+const STATUS_METHODS = {
+	[WorkflowStatus.RegisteringVoters]: startProposalsRegistering,
+	[WorkflowStatus.ProposalsRegistrationStarted]: endProposalsRegistering,
+	[WorkflowStatus.ProposalsRegistrationEnded]: startVotingSession,
+	[WorkflowStatus.VotingSessionStarted]: endVotingSession,
+	[WorkflowStatus.VotingSessionEnded]: tallyVotes,
+}
 
 export const WorkflowStatusContextProvider: React.FC<React.PropsWithChildren<any>> = ({ children }) => {
-
+	console.log('[[WorkflowStatusContextProvider]]: INIT !');
 	const [workflowStatus, setWorkflowStatus] = useState<WorkflowStatus>(WorkflowStatus.RegisteringVoters);
 	const { getStatus, listenStatusChanged } = useContract();
+	const [isLoading, setLoading] = useState(false);
 
-	const onStatusChanged = (...args: any[]) => {
-		console.log('[onStatusChanged]',...args);
-		// setWorkflowStatus(status);
+	const onStatusChanged = async (event : StatusEvent) => {
+		console.log('[onStatusChanged]', event);
+		const status = await updateWorkflowStatus();
 	}
-	// useContractEvent({
-	// 	address:process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
-	// 	abi: Voting.abi,
-	// 	eventName: 'WorkflowStatusChange',
-	// 	listener(log) {
-	// 	  console.log('WorkflowStatusChange!!!! ', log)
-	// 	},
-	//   })
 
-	const updateWorkflowStatus = (status: WorkflowStatus)=> {
+	const updateWorkflowStatus = async () => {
+		const status = await getStatus();
+		console.log('[[WorkflowStatus > getStatus]]', WorkflowStatus[status]);
 		setWorkflowStatus(status);
+		setLoading(false);
+		return status;
+	}
+
+	const nextStep = async () => {
+		if (workflowStatus === WorkflowStatus.VotesTallied) {
+			throw new Error('Workflow is already done');
+		}
+
+		setLoading(true);
+
+		const step = STATUS_METHODS[workflowStatus];
+		if (!step) {
+			console.error(new Error(`Incorrect Status: ${workflowStatus}`));
+			setLoading(false);
+		} else {
+			await step();
+		}
 	}
 
 	useEffect(() => {
 		const watcher = listenStatusChanged(onStatusChanged);
-        const reachStatus = async () => {
-            const status = await getStatus();
-			// try{
-			// 	const options = {
-			// 		address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
-			// 		fromBlock: BigInt(0),
-			// 		toBlock: 'latest'
-			// 	} as GetLogsParameters;
-			// 	console.log('[[OPTIONS]]', options);
-			// 	const logs = await client.getLogs(options);
-			// 	console.log('[[STATUS LOGS]]', logs);
-			// }catch(error) {
-			// 	console.error(error as Error);
-			// }
-            setWorkflowStatus(status);
-        }
-        reachStatus();
-		return ()=> watcher();
+		setLoading(true);
+		updateWorkflowStatus();
+		return () => watcher();
+	}, [])
 
-    }, [])
-
-	return(
-		<WorkflowStatusContext.Provider value={{workflowStatus, updateWorkflowStatus}}>
-			{ children }
+	return (
+		<WorkflowStatusContext.Provider value={{ workflowStatus, nextStep, isLoading }}>
+			{children}
 		</WorkflowStatusContext.Provider>
 	);
 
 };
 
-export const useWorkflowContext = ()=> useContext(WorkflowStatusContext);
+export const useWorkflowContext = () => useContext(WorkflowStatusContext);

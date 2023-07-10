@@ -1,6 +1,6 @@
 "use client"
-import './globals.css'
-import { ChakraProvider } from '@chakra-ui/react'
+import './globals.css';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -27,8 +27,8 @@ import {
 import { ContractContextProvider } from '@/context/contract';
 import {
   OwnerContextProvider
-}
-  from '@/context/owner';
+} from '@/context/owner';
+import { VoteContextProvider } from '@/context/vote';
 
 const { chains, publicClient } = configureChains([hardhat], [publicProvider()]);
 const { connectors } = getDefaultWallets({
@@ -51,25 +51,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-
         <ContractContextProvider>
           <OwnerContextProvider>
-            <VoterContextProvider>
-              <WorkflowStatusContextProvider>
+            <WorkflowStatusContextProvider>
+              <VoterContextProvider>
                 <ProposalContextProvider>
+                <VoteContextProvider>
                   <WagmiConfig config={wagmiConfig}>
-                    <RainbowKitProvider chains={chains}>
+                    <RainbowKitProvider coolMode chains={chains}>
                       <ChakraProvider>
+
                         {children}
+
                       </ChakraProvider>
                     </RainbowKitProvider>
                   </WagmiConfig>
+                </VoteContextProvider>
                 </ProposalContextProvider>
-              </WorkflowStatusContextProvider>
-            </VoterContextProvider>
+              </VoterContextProvider>
+            </WorkflowStatusContextProvider>
           </OwnerContextProvider>
         </ContractContextProvider>
-
       </body>
     </html>
   )

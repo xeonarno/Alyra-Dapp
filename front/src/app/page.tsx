@@ -1,30 +1,28 @@
 "use client"
-import Layout from "@/components/Layout/Layout";
-import { AbsoluteCenter, Box } from "@chakra-ui/react";
-
-import { useAccount } from 'wagmi';
-
+import Layout from "@/Layout/Layout";
+import { Center, Flex, Spinner } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useOwnerContext } from "@/context/owner";
-import OwnerPage from "@/components/OwnerPage/OwnerPage";
-import VoterPage from "@/components/VoterPage/VoterPage";
+import { useAccount } from "wagmi";
 
 export default function Home() {
   const { isConnected } = useAccount();
-
-  const { isOwner } = useOwnerContext();
-
   return (
     <Layout>
-      {!isConnected &&
-        <Box position='relative' h='100%' w="100%">
-          <AbsoluteCenter color='white' axis='both'>
-            <ConnectButton />
-          </AbsoluteCenter>
-        </Box>
-      }
-      {isConnected && isOwner && <OwnerPage />}
-      {isConnected && !isOwner && <VoterPage />}
+      <Flex
+        alignItems='center'
+        justifyContent='center'
+      >
+        <Center w="100vw">
+          {isConnected ? <Spinner
+            thickness='4px'
+            speed='0.65s'
+            emptyColor='gray.200'
+            color='blue.500'
+            size='xl'
+          /> :
+            <ConnectButton />}
+        </Center>
+      </Flex>
     </Layout>
   )
 }

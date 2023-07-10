@@ -1,50 +1,20 @@
 "use client";
-import { Button, ButtonGroup, Input, Flex, useToast, IconButton } from '@chakra-ui/react';
+import { Button, Input, useToast } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 import { useEffect, useState } from 'react';
 import { useVoterContext } from '@/context/voter';
-import { useContract } from '@/context/contract';
-import { Address, ContractFunctionExecutionError } from 'viem';
-import Voter from '@/type/Voter';
-import VoterEvent from '@/type/VoterEvent';
+import { Address } from 'viem';
 
 export default function AdminAddVoter() {
 
-	const [address, setAddress] = useState<Address>("0x" as Address);
-	const { voters, setVoters } = useVoterContext();
+	const [address, setAddress] = useState<Address>('' as Address);
+	const { voters, addNewVoter } = useVoterContext();
 	const toast = useToast();
-	const { addVoter, listenVoterRegistered } = useContract();
 
-	const onVoterRegistered = (event: VoterEvent) => {
-		console.log('Voter ::: ', event);
-		console.log('[[VOTERS]]', voters);
-
-		const { args: { voterAddress } } = event;
-		console.log({ voterAddress });
-		registeredVoter(voterAddress);
-	}
-
-	const registeredVoter = (address: Address) => {
-		const voter: Voter = {
-			address,
-			votedProposalId: 0,
-			hasVoted: false,
-			dirty: true,
-		}
-
-		// Addresses are uniques
-		const found = voters.some(
-			({ address: addr }) => addr.toLowerCase() === address.toLowerCase()
-		);
-		if (!found) {
-
-			console.log('[[VOTERS]]');
-			console.log(voters);
-			console.log(voter);
-			console.log('[[VOTERS]]');
-
-			setVoters([...voters, voter]);
-
+	let nbVoters = voters.length;
+	useEffect(() => {
+		if(voters.length != nbVoters) {
+			nbVoters = voters.length;
 			toast({
 				title: 'Success !',
 				description: "Voter is registered !",
@@ -53,15 +23,10 @@ export default function AdminAddVoter() {
 				isClosable: true,
 				position: 'top',
 			});
-
 		}
-	}
-	useEffect(() => {
-		console.log('[[USEEFFECT MOTHER FUCKER !!!! ]]');
-		const unSubscribe = listenVoterRegistered(onVoterRegistered);
-		return () => unSubscribe();
-	}, [])
+    },[voters])
 
+	// HELPER 
 	const ErrorToast = (msg: string) => {
 		toast({
 			title: 'Error.',
@@ -72,56 +37,54 @@ export default function AdminAddVoter() {
 		});
 	}
 
-	const addVoterAddress = async () => {
+	// EVENT 
+	const handleChange = (e: any) => {
+		setAddress(e.target.value as Address);
+	};
 
-		if (address.length !== 42 || !address.startsWith("0x")) {
+	const addVoterAddress = async () => {
+		const voterAddress = address || "";
+		if (!/^0x[a-fA-F0-9]{40}$/.test(voterAddress)) {
 			ErrorToast("Incorrect Eth Address !");
 			return;
 		}
-
-		// Addresses are uniques
 		const found = voters.some(
-			({ address: addr }) => addr.toLowerCase() === address.toLowerCase()
+			({ address: addr }) => addr === voterAddress
 		);
+
+		setAddress('' as Address);
+
 		if (found) {
 			ErrorToast("Address already registered !");
 		} else {
 			toast({ description: 'Transaction in progress...' });
-			await getApiAddVoter();
+			try {
+				await addNewVoter(voterAddress);
+			}catch(error) {
+				ErrorToast((error as Error).message);
+			}
 		};
 	};
 
-	const getApiAddVoter = async () => {
-		try {
-			try {
-				await addVoter(address);
-			} catch (error) {
-				const { details = "" } = error as ContractFunctionExecutionError;
-				if (details.includes('Already registered')) {
-					registeredVoter(address);
-				} else {
-					throw error;
-				}
-			}
-		} catch (error: any) {
-			console.error(error);
-			ErrorToast((error as Error).message);
-		}
-	}
-
-	// https://chakra-ui.com/docs/components/button
-	// https://chakra-ui.com/docs/components/icon
-	// https://chakra-ui.com/docs/components/input
-	// https://chakra-ui.com/docs/components/flex
 	return (
-		<Flex width="100%">
-			<ButtonGroup isAttached colorScheme='blue'>
-				<IconButton onClick={() => addVoterAddress()} aria-label='Add New Voter' icon={<AddIcon />} />
-				<Button onClick={() => addVoterAddress()}>Add New Voter</Button>
-			</ButtonGroup>
-			<Input placeholder='Ethereum address...' width='auto' id="addressToAdd"
-				onChange={e => setAddress(e.target.value as Address)}
+		<>
+			<Input placeholder='Ethereum address...' width='66%' id="addressToAdd"
+				onChange={handleChange}
+				value={address as string}
+				marginRight="1rem"
+				name="inputAddr"
 			/>
-		</Flex>
+			<Button
+				leftIcon={<AddIcon />}
+				onClick={() => addVoterAddress()}
+				colorScheme='blue'
+				variant='solid'
+				aria-label='Add New Voter'
+				isDisabled={!address.length}
+			>
+				Add New Voter
+			</Button>
+
+		</>
 	);
 }
