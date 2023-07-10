@@ -1,17 +1,15 @@
 "use client";
-import { Heading } from '@chakra-ui/react';
-import { Box } from '@chakra-ui/react';
-import { Text } from '@chakra-ui/react';
+import { Heading, Badge, Box, Text } from '@chakra-ui/react';
 
-export default function AdminCardVoter( { num, address }:any) {
-  return (
-	<Box>
-		<Heading size='xs' >
-		Voter #{ num }
-		</Heading>
-		<Text pt='2' fontSize='sm'>
-		⟠ { address }
-		</Text>
-	</Box>
-  );
+export default function AdminCardVoter({ num, address, last = false }: any) {
+	return (
+		<Box>
+			<Heading size='xs' >
+				Voter #{num} {last && <Badge ml='1' fontSize='0.8em' colorScheme='green'>New</Badge>}
+			</Heading>
+			<Text pt='2' fontSize='sm'>
+				⟠ {address}
+			</Text>
+		</Box>
+	);
 }
