@@ -8,6 +8,7 @@ import Voter from "@/type/Voter";
 import { useContract } from "./contract";
 import { useAccount } from "wagmi";
 import { useOwnerContext } from "./owner";
+import { useVoteContext } from "./vote";
 
 
 type VoterContextType = {
@@ -33,6 +34,7 @@ export const VoterContextProvider: React.FC<React.PropsWithChildren<any>> = ({ c
 	const { addVoter } = useContract();
 	const { address:userAddress}= useAccount();
 	const { isAuth } = useOwnerContext();
+	const { setVoted } = useVoteContext();
 
 	const onVoterRegistered = (event: VoterEvent) => {
 		const { args: { voterAddress } } = event;
@@ -79,15 +81,23 @@ export const VoterContextProvider: React.FC<React.PropsWithChildren<any>> = ({ c
 	const checkVoterStatus = async () => {
 		try {
 			if(userAddress) {
-				await getVoter(userAddress);
+				const voter = await getVoter(userAddress);
+				console.log('Current voter :', voter);
 				registeredVoter(userAddress);
+				if(voter.hasVoted)
+				{
+					console.log('User already vote !');
+					setVoted(true);
+				}
 			}else{
 				throw new Error('[[checkVoterStatus]] failure: no address available', userAddress);
 			}
 		} catch (error) {
 			console.error(error);
 		}
-		setVoter(VOTERS.has(userAddress));
+		const voter = VOTERS.has(userAddress);
+		console.log('isVoter ?', voter);
+		setVoter(voter);
 	}
 
 	useEffect(() => {

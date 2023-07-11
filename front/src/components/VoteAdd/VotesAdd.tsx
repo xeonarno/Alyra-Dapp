@@ -22,6 +22,8 @@ export default function VoteAdd() {
 	const [proposalIndex, setProposalIndex] = useState(0);
 	const [proposal, setProposal] = useState('');
 
+	const [next, setnext] = useState(false);
+
 	const toast = useToast();
 
 	useEffect(() => {
@@ -42,12 +44,22 @@ export default function VoteAdd() {
 		}
 	}, [isVoter])
 
+	const onNext = ()=> {
+		setnext(true);
+	}
+
 	const onVoterStatus = () => {
 		checkVoterStatus();
 	}
 
 	useEffect(() => {
-		handleProposals();
+		try{
+			checkVoterStatus();
+			console.log('hasVoted ', hasVoted);
+			handleProposals();
+		}catch(error){
+			console.error(error);
+		}
 	}, []);
 
 	const handleProposals = () => {
@@ -86,11 +98,11 @@ export default function VoteAdd() {
 	</Center> :
 		<Card width="100%">
 			<CardHeader>
-				<Heading size='md'>Vote:</Heading>
+				<Heading size='md' onClick={onNext}>Vote:</Heading>
 				<Text pt='2' fontSize='sm'>⟠ {address}  {isVoter ? <CheckCircleIcon /> : <WarningIcon onClick={onVoterStatus} />}</Text>
 			</CardHeader>
 			<CardBody>
-				{hasVoted ?
+				{hasVoted || next ?
 					<>
 						<Center>
 							<Text>votre vote : {proposal} </Text>

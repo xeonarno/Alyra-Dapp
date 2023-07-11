@@ -2,6 +2,7 @@
 import Layout from "@/Layout/Layout";
 import AdminValidation from "@/components/AdminValidation/AdminValidation";
 import ProposalsList from "@/components/ProposalsList/ProposalsList";
+import { useOwnerContext } from "@/context/owner";
 import { useWorkflowContext } from "@/context/workflow";
 import { Center, Spinner } from "@chakra-ui/react";
 
@@ -13,6 +14,7 @@ export default function SetupPage() {
 		console.log("[[VoterPage]]: validation !");
 		nextStep();
 	}
+    const { isOwner } = useOwnerContext();
 
     return (
         <Layout>
@@ -27,7 +29,7 @@ export default function SetupPage() {
         </Center> :
             <>
                 <ProposalsList />
-                <AdminValidation question="Start Vote ?" onNext={() =>  handleValidation()} />
+                {isOwner && <AdminValidation question="Start Vote ?" onNext={() =>  handleValidation()} />}
             </>
         }
         </Layout>
