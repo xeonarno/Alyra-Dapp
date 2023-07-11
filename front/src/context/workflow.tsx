@@ -12,6 +12,7 @@ import {
 } from "./contract/voting";
 
 import StatusEvent from "@/type/StatusEvent";
+import { useAccount } from "wagmi";
 
 
 type WorkflowStatusContextType = {
@@ -39,6 +40,7 @@ export const WorkflowStatusContextProvider: React.FC<React.PropsWithChildren<any
 	const [workflowStatus, setWorkflowStatus] = useState<WorkflowStatus>(WorkflowStatus.RegisteringVoters);
 	const { getStatus, listenStatusChanged } = useContract();
 	const [isLoading, setLoading] = useState(false);
+	const { isConnected } = useAccount();
 
 	const onStatusChanged = async (event : StatusEvent) => {
 		console.log('[onStatusChanged]', event);
@@ -68,6 +70,13 @@ export const WorkflowStatusContextProvider: React.FC<React.PropsWithChildren<any
 			await step();
 		}
 	}
+
+	useEffect(()=> {
+		if(isConnected) {
+			setLoading(true);
+			updateWorkflowStatus();
+		}
+	}, [isConnected]);
 
 	useEffect(() => {
 		const watcher = listenStatusChanged(onStatusChanged);

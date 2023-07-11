@@ -19,6 +19,11 @@ export default function ProposalsList() {
     requireProposals();
   }, []);
 
+  const handle = () => {
+    console.log('[[ProposalsList]]: Refresh...');
+    requireProposals();
+  }
+
   return (
     <Flex
       justifyContent='center'
@@ -26,7 +31,7 @@ export default function ProposalsList() {
     >
       <Card w="100%">
         <CardHeader>
-          <Heading size='md'>Proposals</Heading>
+          <Heading size='md' onClick={handle}> Proposals</Heading>
         </CardHeader>
 
         <CardBody>

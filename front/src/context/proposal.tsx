@@ -47,6 +47,7 @@ export const ProposalContextProvider: React.FC<React.PropsWithChildren<any>> = (
 
 	const requireProposals = async () => {
 		if (!isAuth) {
+			console.log("You need to be a voter to get proposals");
 			return;
 		}
 		let id = PROPOSALS.size;
@@ -59,9 +60,10 @@ export const ProposalContextProvider: React.FC<React.PropsWithChildren<any>> = (
 			}
 		} catch (error) {
 			console.log((error as Error).message);
+		} finally {
+			setProposals(Array.from(PROPOSALS.values()));
+			setLoading(false);
 		}
-		setProposals(Array.from(PROPOSALS.values()));
-		setLoading(false);
 	}
 
 	const addNewProposal = async (proposalText: string) => {

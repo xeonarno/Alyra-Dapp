@@ -25,9 +25,9 @@ export const OwnerContextProvider: React.FC<React.PropsWithChildren<any>> = ({ c
     const toast = useToast();
 
     useEffect(()=> {
-        setAuth(false);
+      
         console.log('[[OWNER]]  connected :', isConnected);
-        if(isConnected)
+        if(isConnected && address)
         {
             const isAdmin = async()=> {
                 try {
