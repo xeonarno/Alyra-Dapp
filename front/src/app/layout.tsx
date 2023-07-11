@@ -7,9 +7,11 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { RainbowKitProvider, getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { WagmiConfig, configureChains, createConfig } from "wagmi";
 import {
-  hardhat
+  hardhat,
+  sepolia
 } from "wagmi/chains";
 
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
 import {
@@ -30,10 +32,11 @@ import {
 } from '@/context/owner';
 import { VoteContextProvider } from '@/context/vote';
 
-const { chains, publicClient } = configureChains([hardhat], [publicProvider()]);
+const providers = [publicProvider(), alchemyProvider({apiKey:process.env.NEXT_PUBLIC_ALCHEMY} as any)];
+const { chains, publicClient } = configureChains([hardhat, sepolia], providers as any);
 const { connectors } = getDefaultWallets({
   appName: "Voting App",
-  projectId: "0667a6098b4571da416e29dd6e54e819",
+  projectId: process.env.NEXT_PUBLIC_WAGMI as string,
   chains
 });
 
