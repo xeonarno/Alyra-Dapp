@@ -14,7 +14,7 @@ import StatusEvent from '@/type/StatusEvent';
 import ProposalEvent from '@/type/ProposalEvent';
 import VoteEvent from '@/type/VoteEvent';
 
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+const CONTRACT_ADDRESS = Voting.address || process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 const CONTRACT_ABI = Voting.abi;
 const base = {
     address: CONTRACT_ADDRESS,
