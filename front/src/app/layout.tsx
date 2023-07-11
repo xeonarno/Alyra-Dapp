@@ -1,6 +1,6 @@
 "use client"
-import './globals.css'
-import { ChakraProvider } from '@chakra-ui/react'
+import './globals.css';
+import { ChakraProvider } from '@chakra-ui/react';
 
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -12,12 +12,30 @@ import {
 
 import { publicProvider } from 'wagmi/providers/public';
 
-import { GlobalContextProvider } from '@/context/global';
-import { WorkflowStatusContextProvider } from '@/context/workflow';
-import { ProposalContextProvider } from '@/context/proposals';
+import {
+  VoterContextProvider,
+} from "@/context/voter";
+
+import {
+  WorkflowStatusContextProvider,
+} from '@/context/workflow';
+
+import {
+  ProposalContextProvider,
+} from '@/context/proposal';
+
+import { ContractContextProvider } from '@/context/contract';
+import {
+  OwnerContextProvider
+} from '@/context/owner';
+import { VoteContextProvider } from '@/context/vote';
 
 const { chains, publicClient } = configureChains([hardhat], [publicProvider()]);
-const { connectors } = getDefaultWallets({ appName: "Voting App", projectId: "XXXXXXXXXXXXXXXXXXXXX", chains })
+const { connectors } = getDefaultWallets({
+  appName: "Voting App",
+  projectId: "0667a6098b4571da416e29dd6e54e819",
+  chains
+});
 
 const wagmiConfig = createConfig({
   autoConnect: false,
@@ -33,19 +51,27 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <WagmiConfig config={wagmiConfig}>
-          <RainbowKitProvider chains={chains}>
-            <ChakraProvider>
-              <GlobalContextProvider>
-                <WorkflowStatusContextProvider>
-                  <ProposalContextProvider>
-                    {children}
-                  </ProposalContextProvider>
-                </WorkflowStatusContextProvider>
-              </GlobalContextProvider>
-            </ChakraProvider>
-          </RainbowKitProvider>
-        </WagmiConfig>
+        <ContractContextProvider>
+          <OwnerContextProvider>
+            <WorkflowStatusContextProvider>
+              <VoterContextProvider>
+                <ProposalContextProvider>
+                <VoteContextProvider>
+                  <WagmiConfig config={wagmiConfig}>
+                    <RainbowKitProvider coolMode chains={chains}>
+                      <ChakraProvider>
+
+                        {children}
+
+                      </ChakraProvider>
+                    </RainbowKitProvider>
+                  </WagmiConfig>
+                </VoteContextProvider>
+                </ProposalContextProvider>
+              </VoterContextProvider>
+            </WorkflowStatusContextProvider>
+          </OwnerContextProvider>
+        </ContractContextProvider>
       </body>
     </html>
   )

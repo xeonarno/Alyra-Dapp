@@ -98,7 +98,6 @@ describe('Voting', () => {
                 const descriptionMock = 'descValue';
                 const genesisMock = ['GENESIS', 0n, "0x0000000000000000000000000000000000000000000000000000000000000000"];
                 //await voting.addProposal(descriptionMock);
-                
                 // Act
                 const result = await voting.getOneProposal(0);
 
@@ -113,7 +112,6 @@ describe('Voting', () => {
                 const proposalName = 'IMPERIOUS REX';
                 const genesisMock = [proposalName, 0n, "0x1caf02809bb2ff23989565a114e7fabb78f984bd9e912af1772a643d23a004e6"];
                 await voting.addProposal( proposalName);
-                
                 // Act
                 const result = await voting.getOneProposal(1);
 

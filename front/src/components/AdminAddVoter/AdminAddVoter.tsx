@@ -1,85 +1,90 @@
 "use client";
-import { IconButton } from '@chakra-ui/react';
+import { Button, Input, useToast } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import { Button, ButtonGroup } from '@chakra-ui/react';
-import { Input } from '@chakra-ui/react';
-import { Flex } from '@chakra-ui/react';
-import { useState } from 'react';
-import { useGlobalContext } from '@/context/global';
-import { useToast } from '@chakra-ui/react';
-
+import { useEffect, useState } from 'react';
+import { useVoterContext } from '@/context/voter';
+import { Address } from 'viem';
 
 export default function AdminAddVoter() {
 
-	const [address, setAddress] = useState("");
-	const {voters,  setVoters}  = useGlobalContext();
+	const [address, setAddress] = useState<Address>('' as Address);
+	const { voters, addNewVoter } = useVoterContext();
 	const toast = useToast();
 
-	const ErrorToast = ( msg:string ) => {
+	let nbVoters = voters.length;
+	useEffect(() => {
+		if(voters.length != nbVoters) {
+			nbVoters = voters.length;
+			toast({
+				title: 'Success !',
+				description: "Voter is registered !",
+				status: 'success',
+				duration: 4500,
+				isClosable: true,
+				position: 'top',
+			});
+		}
+    },[voters])
+
+	// HELPER
+	const ErrorToast = (msg: string) => {
 		toast({
-			title      : 'Error.',
+			title: 'Error.',
 			description: msg,
-			status     : 'error',
-			duration   : 4500,
-			isClosable : true,
+			status: 'error',
+			duration: 4500,
+			isClosable: true,
 		});
 	}
 
-	const addVoterAddress = () => {
-
-		if( address.length !== 42) { ErrorToast("Incorrect Eth Address !"); return;}
-		if( address.slice(0,2) !== "0x") { ErrorToast("Incorrect Eth Address !"); return;}
-
-		// Addresses are uniques
-		for( let i=0 ;i < voters.length; i++ ) {
-			if( voters[i].address.toLowerCase() !== address.toLowerCase()) { continue;}
-			ErrorToast("Address already registered !");
-			return;
-		}
-
-		toast({ description: 'Transaction in progress...' });
-		delay(1500).then(() => {
-			getApiAddVoter();
-		});
-
+	// EVENT
+	const handleChange = (e: any) => {
+		setAddress(e.target.value as Address);
 	};
 
-	function delay(ms:number) {
-		return new Promise(resolve => setTimeout(resolve, ms));
-	}
+	const addVoterAddress = async () => {
+		const voterAddress = address || "";
+		if (!/^0x[a-fA-F0-9]{40}$/.test(voterAddress)) {
+			ErrorToast("Incorrect Eth Address !");
+			return;
+		}
+		const found = voters.some(
+			({ address: addr }) => addr === voterAddress
+		);
 
-	const getApiAddVoter = () => {
+		setAddress('' as Address);
 
-		setVoters( [...voters, {
-			hasVoted       : false,
-			votedProposalId: 0,
-			address        : address
-		}]);
+		if (found) {
+			ErrorToast("Address already registered !");
+		} else {
+			toast({ description: 'Transaction in progress...' });
+			try {
+				await addNewVoter(voterAddress);
+			}catch(error) {
+				ErrorToast((error as Error).message);
+			}
+		};
+	};
 
-		toast({
-			title      : 'Success !',
-			description: "Voter is registered !",
-			status     : 'success',
-			duration   : 4500,
-			isClosable : true,
-			position   : 'top',
-		});
-
-	}
-	
-	// https://chakra-ui.com/docs/components/button
-	// https://chakra-ui.com/docs/components/icon
-	// https://chakra-ui.com/docs/components/input
-	// https://chakra-ui.com/docs/components/flex
 	return (
-	<Flex width="100%">
-		<ButtonGroup isAttached colorScheme='blue'>
-			<IconButton onClick={ ()=> addVoterAddress()} aria-label='Add New Voter' icon={<AddIcon />} />
-			<Button onClick={ ()=> addVoterAddress()}>Add New Voter</Button>
-		</ButtonGroup>
-		<Input placeholder='Ethereum address...' width='auto' id="addressToAdd"
-			onChange={e => setAddress(e.target.value)}
-		/>
-	</Flex>
-  );
+		<>
+			<Input placeholder='Ethereum address...' width='66%' id="addressToAdd"
+				onChange={handleChange}
+				value={address as string}
+				marginRight="1rem"
+				name="inputAddr"
+			/>
+			<Button
+				leftIcon={<AddIcon />}
+				onClick={() => addVoterAddress()}
+				colorScheme='blue'
+				variant='solid'
+				aria-label='Add New Voter'
+				isDisabled={!address.length}
+			>
+				Add New Voter
+			</Button>
+
+		</>
+	);
 }
